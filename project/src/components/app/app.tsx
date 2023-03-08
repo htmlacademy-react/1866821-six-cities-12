@@ -26,7 +26,7 @@ function App(props: AppProps): JSX.Element {
             element={<LoginPage />}
           />
           <Route
-            path={AppRoute.RoomDynamic}
+            path={AppRoute.Room}
             element={<RoomPage />}
           />
           <Route
