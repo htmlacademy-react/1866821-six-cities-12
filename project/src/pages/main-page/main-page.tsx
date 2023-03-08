@@ -69,7 +69,7 @@ export default function MainPage({rentalOffersNumber}: MainPageProps) {
                 </ul>
               </form>
               <div className="cities__places-list places__list tabs__content">
-                {Array.from(Array(rentalOffersNumber).keys()).map((keyValue) =>
+                {Array.from({length: rentalOffersNumber}, (_, keyValue) =>
                   <PlaceCard key={keyValue} />
                 )}
               </div>
