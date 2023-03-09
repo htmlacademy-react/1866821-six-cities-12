@@ -1,5 +1,5 @@
-import PageFooter from '../../components/page-parts/page-footer/page-footer';
-import PageHeader from '../../components/page-parts/page-header/page-header';
+import PageFooter from '../../components/page-footer/page-footer';
+import PageHeader from '../../components/page-header/page-header';
 
 export default function FavoritesPage() {
   return (

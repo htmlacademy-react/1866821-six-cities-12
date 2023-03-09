@@ -6,8 +6,7 @@ type PrivateRouteProps = {
   children: JSX.Element;
 }
 
-function PrivateRoute(props: PrivateRouteProps){
-  const {authorizationStatus, children} = props;
+function PrivateRoute({authorizationStatus, children}: PrivateRouteProps){
   return (
     authorizationStatus === AuthorizationStatus.Auth
       ? children

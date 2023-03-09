@@ -1,4 +1,4 @@
-import PageHeader from '../../components/page-parts/page-header/page-header';
+import PageHeader from '../../components/page-header/page-header';
 import PlaceCard from '../../components/place-card/place-card';
 
 type MainPageProps = {
