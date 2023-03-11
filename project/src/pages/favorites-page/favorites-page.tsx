@@ -1,10 +1,8 @@
-import PageFooter from '../../components/page-footer/page-footer';
-import PageHeader from '../../components/page-header/page-header';
+import LayoutBase from '../../layouts/layout-base/layout-base';
 
 export default function FavoritesPage() {
   return (
-    <div className="page">
-      <PageHeader/>
+    <LayoutBase withBaseFooter pageTitle='6 cities' className='page--gray page--main'>
       <main className="page__main page__main--favorites">
         <div className="page__favorites-container container">
           <section className="favorites">
@@ -134,7 +132,6 @@ export default function FavoritesPage() {
           </section>
         </div>
       </main>
-      <PageFooter/>
-    </div>
+    </LayoutBase>
   );
 }

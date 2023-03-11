@@ -1,5 +1,5 @@
-import PageHeader from '../../components/page-header/page-header';
 import PlaceCard from '../../components/place-card/place-card';
+import LayoutBase from '../../layouts/layout-base/layout-base';
 
 type MainPageProps = {
   rentalOffersNumber: number;
@@ -7,9 +7,7 @@ type MainPageProps = {
 
 export default function MainPage({rentalOffersNumber}: MainPageProps) {
   return (
-    <div className="page page--gray page--main">
-      <PageHeader />
-
+    <LayoutBase withBaseHeader pageTitle='6 cities' className='page--gray page--main'>
       <main className="page__main page__main--index">
         <h1 className="visually-hidden">Cities</h1>
         <div className="tabs">
@@ -80,6 +78,6 @@ export default function MainPage({rentalOffersNumber}: MainPageProps) {
           </div>
         </div>
       </main>
-    </div>
+    </LayoutBase>
   );
 }

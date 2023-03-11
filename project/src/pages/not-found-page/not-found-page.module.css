@@ -1,4 +1,4 @@
-.container--centered {
+.containerCentered {
   display: flex;
   flex-direction: column;
   justify-content: center;
