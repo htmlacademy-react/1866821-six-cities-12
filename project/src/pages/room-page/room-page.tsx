@@ -1,10 +1,8 @@
-import PageHeader from '../../components/page-parts/page-header/page-header';
+import LayoutBase from '../../layouts/layout-base/layout-base';
 
 export default function RoomPage() {
   return (
-    <div className="page">
-      <PageHeader />
-
+    <LayoutBase withBaseHeader pageTitle="room">
       <main className="page__main page__main--property">
         <section className="property">
           <div className="property__gallery-container container">
@@ -307,6 +305,6 @@ export default function RoomPage() {
           </section>
         </div>
       </main>
-    </div>
+    </LayoutBase>
   );
 }
