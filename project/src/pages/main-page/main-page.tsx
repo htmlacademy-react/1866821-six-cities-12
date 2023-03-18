@@ -1,11 +1,13 @@
-import PlaceCard from '../../components/place-card/place-card';
+import PlaceCardList from '../../components/place-card-list/place-card-list';
 import LayoutBase from '../../layouts/layout-base/layout-base';
+import { Offers } from '../../types/offer';
 
 type MainPageProps = {
   rentalOffersNumber: number;
+  offers: Offers;
 }
 
-export default function MainPage({rentalOffersNumber}: MainPageProps) {
+export default function MainPage({rentalOffersNumber, offers}: MainPageProps) {
   return (
     <LayoutBase withBaseHeader pageTitle='6 cities' className='page--gray page--main'>
       <main className="page__main page__main--index">
@@ -66,11 +68,10 @@ export default function MainPage({rentalOffersNumber}: MainPageProps) {
                   <li className="places__option" tabIndex={0}>Top rated first</li>
                 </ul>
               </form>
+              {offers &&
               <div className="cities__places-list places__list tabs__content">
-                {Array.from({length: rentalOffersNumber}, (_, keyValue) =>
-                  <PlaceCard key={keyValue} />
-                )}
-              </div>
+                <PlaceCardList offers={offers}/>
+              </div>}
             </section>
             <div className="cities__right-section">
               <section className="cities__map map"></section>

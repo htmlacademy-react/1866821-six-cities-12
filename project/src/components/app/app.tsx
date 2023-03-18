@@ -7,19 +7,25 @@ import FavoritesPage from '../../pages/favorites-page/favorites-page';
 import NotFoundPage from '../../pages/not-found-page/not-found-page';
 import RoomPage from '../../pages/room-page/room-page';
 import PrivateRoute from '../private-route/private-route';
+import { Offers } from '../../types/offer';
+import { Reviews } from '../../types/review';
 
 type AppProps = {
+  offers: Offers;
+  favoriteOffers: Offers;
+  reviwes: Reviews;
   rentalOffersNumber: number;
 }
 
 function App(props: AppProps): JSX.Element {
+  String(props.reviwes);
   return (
     <HelmetProvider>
       <BrowserRouter>
         <Routes>
           <Route
             path={AppRoute.Root}
-            element={<MainPage rentalOffersNumber={props.rentalOffersNumber}/>}
+            element={<MainPage rentalOffersNumber={props.rentalOffersNumber} offers={props.offers}/>}
           />
           <Route
             path={AppRoute.Login}
@@ -33,9 +39,9 @@ function App(props: AppProps): JSX.Element {
             path={AppRoute.Favorites}
             element={
               <PrivateRoute
-                authorizationStatus={AuthorizationStatus.NoAuth}
+                authorizationStatus={AuthorizationStatus.Auth}
               >
-                <FavoritesPage />
+                <FavoritesPage offers={props.favoriteOffers}/>
               </PrivateRoute>
             }
           />

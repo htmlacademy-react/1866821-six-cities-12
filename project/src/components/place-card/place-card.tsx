@@ -1,18 +1,31 @@
-export default function PlaceCard() {
+import { CITIES_CLASS_PREFIX } from '../../const';
+import { Offer } from '../../types/offer';
+import { getRatingInPercents } from '../../utils/place-card';
+
+type PlaceCardProps = {
+  classNamePrefix?: string;
+  offer: Offer;
+  onCardActive: (cardId: number) => void;
+}
+
+export default function PlaceCard({classNamePrefix = CITIES_CLASS_PREFIX, offer, onCardActive}: PlaceCardProps) {
   return (
-    <article className="cities__card place-card">
+    <article className={`${classNamePrefix}__card place-card`} onMouseOver={() => onCardActive(offer.id)}>
+      {offer.isPremium &&
       <div className="place-card__mark">
         <span>Premium</span>
-      </div>
-      <div className="cities__image-wrapper place-card__image-wrapper">
+      </div>}
+      {offer.previewImage &&
+      <div className={`${classNamePrefix}__image-wrapper place-card__image-wrapper`}>
         <a href="#/">
-          <img className="place-card__image" src="img/apartment-01.jpg" width="260" height="200" alt="Place" />
+          <img className="place-card__image" src={offer.previewImage} width="260" height="200" alt="Place" />
         </a>
-      </div>
-      <div className="place-card__info">
+      </div>}
+      <div className={`${classNamePrefix}__card-info place-card__info`}>
+        {offer.price &&
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
-            <b className="place-card__price-value">&euro;120</b>
+            <b className="place-card__price-value">&euro;{offer.price}</b>
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
           <button className="place-card__bookmark-button button" type="button">
@@ -21,17 +34,21 @@ export default function PlaceCard() {
             </svg>
             <span className="visually-hidden">To bookmarks</span>
           </button>
-        </div>
+        </div>}
+
+        {offer.rating &&
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{width: '80%'}}></span>
+            <span style={{width: getRatingInPercents(offer.rating)}}></span>
             <span className="visually-hidden">Rating</span>
           </div>
-        </div>
+        </div>}
+        {offer.title &&
         <h2 className="place-card__name">
-          <a href="#/">Beautiful &amp; luxurious apartment at great location</a>
-        </h2>
-        <p className="place-card__type">Apartment</p>
+          <a href="#/">{offer.title}</a>
+        </h2>}
+        {offer.type &&
+        <p className="place-card__type">{offer.type}</p>}
       </div>
     </article>
   );
