@@ -3,11 +3,10 @@ import LayoutBase from '../../layouts/layout-base/layout-base';
 import { Offers } from '../../types/offer';
 
 type MainPageProps = {
-  rentalOffersNumber: number;
   offers: Offers;
 }
 
-export default function MainPage({rentalOffersNumber, offers}: MainPageProps) {
+export default function MainPage({offers}: MainPageProps) {
   return (
     <LayoutBase withBaseHeader pageTitle='6 cities' className='page--gray page--main'>
       <main className="page__main page__main--index">
@@ -52,7 +51,7 @@ export default function MainPage({rentalOffersNumber, offers}: MainPageProps) {
           <div className="cities__places-container container">
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">{rentalOffersNumber} places to stay in Amsterdam</b>
+              <b className="places__found">{offers.length} places to stay in Amsterdam</b>
               <form className="places__sorting" action="#" method="get">
                 <span className="places__sorting-caption">Sort by</span>
                 <span className="places__sorting-type" tabIndex={0}>
@@ -68,10 +67,9 @@ export default function MainPage({rentalOffersNumber, offers}: MainPageProps) {
                   <li className="places__option" tabIndex={0}>Top rated first</li>
                 </ul>
               </form>
-              {offers &&
               <div className="cities__places-list places__list tabs__content">
                 <PlaceCardList offers={offers}/>
-              </div>}
+              </div>
             </section>
             <div className="cities__right-section">
               <section className="cities__map map"></section>

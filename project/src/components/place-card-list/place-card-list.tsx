@@ -9,7 +9,7 @@ type PlaceCardListProps = {
 
 export default function PlaceCardList({offers}: PlaceCardListProps) {
   const [activeCardId, setActiveCardId] = useState(NO_CARD_ID);
-  String(activeCardId);
+
   return (
     <>
       {offers.map((offer) => (

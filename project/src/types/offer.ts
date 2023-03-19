@@ -4,13 +4,16 @@ import { Location } from './location';
 
 export type Offers = Offer[];
 
+export interface OffersByCity {
+  [city: string]: Offers;
+}
 
 export type Offer = {
   id: number;
   location: Location;
   description: string;
   host: Host;
-  goods: Array<Good>;
+  goods: Good[];
   price: number;
   maxAdults: number;
   bedrooms: number;
