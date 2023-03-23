@@ -27,6 +27,7 @@ export type Offer = {
   city: City;
 };
 
+export type OffersList = 'favorites' | 'nearPlaces' | 'cities';
 
 export type Good =
   'Fridge' |
@@ -36,7 +37,14 @@ export type Good =
   'Laptop friendly workspace' |
   'Breakfast' |
   'Washer' |
-  'Towels'
+  'Towels' |
+  'Wi-Fi' |
+  'Cabel TV' |
+  'Dishwasher' |
+  'Kitchen' |
+  'Coffee machine' |
+  'Heating' |
+  'Washing machine'
 
 export type Placement =
   'room' |

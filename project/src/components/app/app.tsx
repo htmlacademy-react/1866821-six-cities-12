@@ -8,13 +8,15 @@ import NotFoundPage from '../../pages/not-found-page/not-found-page';
 import RoomPage from '../../pages/room-page/room-page';
 import PrivateRoute from '../private-route/private-route';
 import { Offers } from '../../types/offer';
+import { Reviews } from '../../types/review';
 
 type AppProps = {
   offers: Offers;
   favoriteOffers: Offers;
+  reviews: Reviews;
 }
 
-function App({offers, favoriteOffers}: AppProps) {
+function App({offers, favoriteOffers, reviews}: AppProps) {
   return (
     <HelmetProvider>
       <BrowserRouter>
@@ -29,7 +31,7 @@ function App({offers, favoriteOffers}: AppProps) {
           />
           <Route
             path={AppRoute.Room}
-            element={<RoomPage />}
+            element={<RoomPage offers={offers} reviews={reviews}/>}
           />
           <Route
             path={AppRoute.Favorites}

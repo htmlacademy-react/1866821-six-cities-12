@@ -1,6 +1,7 @@
 import LayoutBase from '../../layouts/layout-base/layout-base';
 import PlaceCardList from '../../components/place-card-list/place-card-list';
 import { Offers, OffersByCity } from '../../types/offer';
+import { groupOffers } from '../../utils/favorites';
 
 type FavoritesPageProps = {
   offers: Offers;
@@ -8,17 +9,10 @@ type FavoritesPageProps = {
 
 
 export default function FavoritesPage({offers}: FavoritesPageProps) {
-
-  const offersByCity: OffersByCity = {};
-  offers.forEach((offer) => {
-    if (!offersByCity[offer.city.name]) {
-      offersByCity[offer.city.name] = [];
-    }
-    offersByCity[offer.city.name].push(offer);
-  });
+  const offersByCity: OffersByCity = groupOffers(offers);
 
   return (
-    <LayoutBase withBaseFooter pageTitle='6 cities' className='page--gray page--main'>
+    <LayoutBase withBaseHeader withBaseFooter pageTitle='6 cities' className='page--gray page--main'>
       <main className="page__main page__main--favorites">
         <div className="page__favorites-container container">
           <section className="favorites">
@@ -34,7 +28,7 @@ export default function FavoritesPage({offers}: FavoritesPageProps) {
                     </div>
                   </div>
                   <div className="favorites__places">
-                    <PlaceCardList offers={offersByCity[cityName]}/>
+                    <PlaceCardList offers={offersByCity[cityName]} type='favorites' classNamePrefix='favorites'/>
                   </div>
                 </li>))}
             </ul>

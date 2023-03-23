@@ -1,15 +1,33 @@
-import { CITIES_CLASS_PREFIX } from '../../const';
-import { Offer } from '../../types/offer';
-import { getRatingInPercents } from '../../utils/place-card';
+import { Offer, OffersList } from '../../types/offer';
 import { bringFirstCharToUpperCase } from '../../utils/common';
+import { Link } from 'react-router-dom';
+import Rating from '../rating/rating';
 
 type PlaceCardProps = {
-  classNamePrefix?: string;
+  classNamePrefix: string;
   offer: Offer;
   onCardActive: (cardId: number) => void;
+  type: OffersList;
 }
 
-export default function PlaceCard({classNamePrefix = CITIES_CLASS_PREFIX, offer, onCardActive}: PlaceCardProps) {
+const imageSizes = {
+  favorites: {
+    width: 150,
+    height: 110
+  },
+  nearPlaces: {
+    width: 260,
+    height: 200
+  },
+  cities: {
+    width: 260,
+    height: 200
+  }
+};
+
+
+export default function PlaceCard({classNamePrefix, offer, onCardActive, type}: PlaceCardProps) {
+  const size = imageSizes[type];
   return (
     <article className={`${classNamePrefix}__card place-card`} onMouseOver={() => onCardActive(offer.id)}>
       <div className="place-card__mark">
@@ -17,7 +35,7 @@ export default function PlaceCard({classNamePrefix = CITIES_CLASS_PREFIX, offer,
       </div>
       <div className={`${classNamePrefix}__image-wrapper place-card__image-wrapper`}>
         <a href="#/">
-          <img className="place-card__image" src={offer.previewImage} width="260" height="200" alt="Place" />
+          <img className="place-card__image" src={offer.previewImage} width={size.width} height={size.height} alt="Place" />
         </a>
       </div>
       <div className={`${classNamePrefix}__card-info place-card__info`}>
@@ -35,13 +53,10 @@ export default function PlaceCard({classNamePrefix = CITIES_CLASS_PREFIX, offer,
         </div>
 
         <div className="place-card__rating rating">
-          <div className="place-card__stars rating__stars">
-            <span style={{width: getRatingInPercents(offer.rating)}}></span>
-            <span className="visually-hidden">Rating</span>
-          </div>
+          <Rating rating={offer.rating} className='place-card__stars'/>
         </div>
         <h2 className="place-card__name">
-          <a href="#/">{bringFirstCharToUpperCase(offer.title)}</a>
+          <Link to={`/offer/${offer.id}`}>{bringFirstCharToUpperCase(offer.title)}</Link>
         </h2>
         <p className="place-card__type">{bringFirstCharToUpperCase(offer.type)}</p>
       </div>

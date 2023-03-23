@@ -7,7 +7,7 @@ export const mockReviews: Reviews = [
     id: 1,
     rating: 4,
     user: {
-      avatarUrl: 'img/1.png',
+      avatarUrl: 'img/avatar-max.jpg',
       id: 1,
       isPro: false,
       name: 'Oliver.conner'
@@ -19,7 +19,7 @@ export const mockReviews: Reviews = [
     id: 2,
     rating: 3,
     user: {
-      avatarUrl: 'img/2.png',
+      avatarUrl: 'img/avatar-max.jpg',
       id: 4,
       isPro: false,
       name: 'Poliver.conner'
