@@ -5,14 +5,25 @@ type FeedbackRatingProps = {
   onRatingChange: ChangeEventHandlerCommon;
 }
 
+type RatingTitles = {
+  [key: number]: string;
+}
+
+const titles: RatingTitles = {
+  1: 'terribly',
+  2: 'badly',
+  3: 'not bad',
+  4: 'good',
+  5: 'perfect'
+};
+
 export default function FeedbackRating({onRatingChange}: FeedbackRatingProps) {
+
   return (
     <div className="reviews__rating-form form__rating">
-      <FeedbackRatingItem onRatingItemChange={onRatingChange} ratingNumber={5}/>
-      <FeedbackRatingItem onRatingItemChange={onRatingChange} ratingNumber={4}/>
-      <FeedbackRatingItem onRatingItemChange={onRatingChange} ratingNumber={3}/>
-      <FeedbackRatingItem onRatingItemChange={onRatingChange} ratingNumber={2}/>
-      <FeedbackRatingItem onRatingItemChange={onRatingChange} ratingNumber={1}/>
+      {Object.keys(titles).map((titleIndex) => (
+        <FeedbackRatingItem key={titleIndex} onRatingItemChange={onRatingChange} ratingNumber={titleIndex} title={titles[Number(titleIndex)]}/>
+      ))}
     </div>
   );
 }

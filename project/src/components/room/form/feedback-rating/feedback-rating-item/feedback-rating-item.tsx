@@ -2,19 +2,11 @@ import { ChangeEventHandlerCommon } from '../../../../../types/handlers';
 
 type FeedbackRatingItemProps = {
   onRatingItemChange: ChangeEventHandlerCommon;
-  ratingNumber: 1 | 2 | 3 | 4 | 5;
+  ratingNumber: string;
+  title: string;
 }
 
-const titles = {
-  1: 'terribly',
-  2: 'badly',
-  3: 'not bad',
-  4: 'good',
-  5: 'perfect'
-};
-
-export default function FeedbackRatingItem({onRatingItemChange, ratingNumber}: FeedbackRatingItemProps) {
-  const title = titles[ratingNumber];
+export default function FeedbackRatingItem({onRatingItemChange, ratingNumber, title}: FeedbackRatingItemProps) {
   return (
     <>
       <input onChange={onRatingItemChange} className="form__rating-input visually-hidden" name="rating" value={ratingNumber} id={`${ratingNumber}-stars`} type="radio" />
