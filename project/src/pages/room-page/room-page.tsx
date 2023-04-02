@@ -12,6 +12,9 @@ import { Reviews } from '../../types/review';
 import RoomReviews from '../../components/room/room-reviews/room-reviews';
 import Map from '../../components/map/map';
 import PlaceCardList from '../../components/place-card-list/place-card-list';
+import { getPointsList } from '../../utils/points';
+import { Point } from 'types/point';
+import { useState } from 'react';
 
 type RoomPageProps = {
   offers: Offers;
@@ -26,6 +29,15 @@ export default function RoomPage({offers, reviews}: RoomPageProps) {
   if (!offer) {
     navigate(AppRoute.NotFound);
   }
+
+  const points = getPointsList(offers);
+
+  const [selectedPoint, setSelectedPoint] = useState<Point | undefined>(undefined);
+
+  const onListItemHover = (listItemName: string) => {
+    const currentPoint = points.find((point) => point.title === listItemName);
+    setSelectedPoint(currentPoint);
+  };
 
   return (
     <div>
@@ -74,13 +86,18 @@ export default function RoomPage({offers, reviews}: RoomPageProps) {
                 <RoomReviews reviews={reviews}/>
               </div>
             </div>
-            <Map className='property__map'/>
+            <Map
+              className='property__map'
+              city={offer.city}
+              points={points}
+              selectedPoint={selectedPoint}
+            />
           </section>
           <div className="container">
             <section className="near-places places">
               <h2 className="near-places__title">Other places in the neighbourhood</h2>
               <div className="near-places__list places__list">
-                <PlaceCardList offers={offers} type='nearPlaces' classNamePrefix='near-places' />
+                <PlaceCardList offers={offers} type='nearPlaces' classNamePrefix='near-places' onListItemHover={onListItemHover}/>
               </div>
             </section>
           </div>

@@ -2,11 +2,13 @@ import { Offer, OffersList } from '../../types/offer';
 import { bringFirstCharToUpperCase } from '../../utils/common';
 import { Link } from 'react-router-dom';
 import Rating from '../rating/rating';
+import { MouseEvent } from 'react';
 
 type PlaceCardProps = {
   classNamePrefix: string;
   offer: Offer;
   onCardActive: (cardId: number) => void;
+  onCardHover: (listItemName: string) => void;
   type: OffersList;
 }
 
@@ -26,10 +28,16 @@ const imageSizes = {
 };
 
 
-export default function PlaceCard({classNamePrefix, offer, onCardActive, type}: PlaceCardProps) {
+export default function PlaceCard({classNamePrefix, offer, onCardActive, onCardHover, type}: PlaceCardProps) {
   const size = imageSizes[type];
+
+  const cardHoverHandler = (event: MouseEvent<HTMLLIElement>) => {
+    event.preventDefault();
+    onCardHover(String(event.currentTarget.querySelector('.place-card__name')?.innerHTML));
+  };
+
   return (
-    <article className={`${classNamePrefix}__card place-card`} onMouseOver={() => onCardActive(offer.id)}>
+    <article className={`${classNamePrefix}__card place-card`} onMouseOver={() => onCardActive(offer.id)} onMouseEnter={cardHoverHandler}>
       <div className="place-card__mark">
         <span>Premium</span>
       </div>

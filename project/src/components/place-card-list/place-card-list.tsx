@@ -7,9 +7,10 @@ type PlaceCardListProps = {
   offers: Offers;
   classNamePrefix: string;
   type: OffersList;
+  onListItemHover: (listItemName: string) => void;
 }
 
-export default function PlaceCardList({offers, classNamePrefix, type}: PlaceCardListProps) {
+export default function PlaceCardList({offers, classNamePrefix, type, onListItemHover}: PlaceCardListProps) {
   const [activeCardId, setActiveCardId] = useState(NO_CARD_ID);
 
   return (
@@ -21,6 +22,7 @@ export default function PlaceCardList({offers, classNamePrefix, type}: PlaceCard
           type={type}
           classNamePrefix={classNamePrefix}
           onCardActive={setActiveCardId}
+          onCardHover={onListItemHover}
         />
       ))}
     </>
