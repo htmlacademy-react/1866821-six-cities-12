@@ -28,6 +28,7 @@ const imageSizes = {
 
 export default function PlaceCard({classNamePrefix, offer, onCardActive, type}: PlaceCardProps) {
   const size = imageSizes[type];
+
   return (
     <article className={`${classNamePrefix}__card place-card`} onMouseOver={() => onCardActive(offer.id)}>
       <div className="place-card__mark">

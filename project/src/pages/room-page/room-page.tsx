@@ -12,6 +12,8 @@ import { Reviews } from '../../types/review';
 import RoomReviews from '../../components/room/room-reviews/room-reviews';
 import Map from '../../components/map/map';
 import PlaceCardList from '../../components/place-card-list/place-card-list';
+import { useState } from 'react';
+import { NO_CARD_ID } from '../../const';
 
 type RoomPageProps = {
   offers: Offers;
@@ -26,6 +28,8 @@ export default function RoomPage({offers, reviews}: RoomPageProps) {
   if (!offer) {
     navigate(AppRoute.NotFound);
   }
+
+  const [activeOfferId, setActiveOfferId] = useState(NO_CARD_ID);
 
   return (
     <div>
@@ -74,13 +78,18 @@ export default function RoomPage({offers, reviews}: RoomPageProps) {
                 <RoomReviews reviews={reviews}/>
               </div>
             </div>
-            <Map className='property__map'/>
+            <Map
+              className='property__map'
+              city={offer.city}
+              offers={offers}
+              selectedOfferId={activeOfferId}
+            />
           </section>
           <div className="container">
             <section className="near-places places">
               <h2 className="near-places__title">Other places in the neighbourhood</h2>
               <div className="near-places__list places__list">
-                <PlaceCardList offers={offers} type='nearPlaces' classNamePrefix='near-places' />
+                <PlaceCardList offers={offers} type='nearPlaces' classNamePrefix='near-places' onListItemActive={setActiveOfferId}/>
               </div>
             </section>
           </div>

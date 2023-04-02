@@ -2,6 +2,8 @@ import LayoutBase from '../../layouts/layout-base/layout-base';
 import PlaceCardList from '../../components/place-card-list/place-card-list';
 import { Offers, OffersByCity } from '../../types/offer';
 import { groupOffers } from '../../utils/favorites';
+import { useState } from 'react';
+import { NO_CARD_ID } from '../../const';
 
 type FavoritesPageProps = {
   offers: Offers;
@@ -10,6 +12,8 @@ type FavoritesPageProps = {
 
 export default function FavoritesPage({offers}: FavoritesPageProps) {
   const offersByCity: OffersByCity = groupOffers(offers);
+
+  const [activeOfferId, setActiveOfferId] = useState(NO_CARD_ID);
 
   return (
     <LayoutBase withBaseHeader withBaseFooter pageTitle='6 cities' className='page--gray page--main'>
@@ -28,7 +32,12 @@ export default function FavoritesPage({offers}: FavoritesPageProps) {
                     </div>
                   </div>
                   <div className="favorites__places">
-                    <PlaceCardList offers={offersByCity[cityName]} type='favorites' classNamePrefix='favorites'/>
+                    <PlaceCardList
+                      offers={offersByCity[cityName]}
+                      type='favorites'
+                      classNamePrefix='favorites'
+                      onListItemActive={setActiveOfferId}
+                    />
                   </div>
                 </li>))}
             </ul>
