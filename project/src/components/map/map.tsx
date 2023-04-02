@@ -2,23 +2,23 @@ import 'leaflet/dist/leaflet.css';
 import styles from './map.module.css';
 import cn from 'classnames';
 import { City } from '../../types/city';
-import { Point, Points } from 'types/point';
 import { useRef } from 'react';
-import useMap from '../../hooks/useMap';
-import useMapMarkers from '../../hooks/useMapMarkers';
+import useMap from '../../hooks/use-map';
+import useMapMarkers from '../../hooks/use-map-markers';
+import { Offers } from 'types/offer';
 
 type MapProps = {
   className: string;
   city: City;
-  points: Points;
-  selectedPoint: Point | undefined;
+  offers: Offers;
+  selectedOfferId: number | undefined;
 }
 
-export default function Map({className, city, points, selectedPoint}: MapProps) {
+export default function Map({className, city, offers, selectedOfferId}: MapProps) {
 
   const mapRef = useRef(null);
   const map = useMap(mapRef, city);
-  useMapMarkers(map, points, selectedPoint);
+  useMapMarkers({map, offers, selectedOfferId});
 
   return (
     <section

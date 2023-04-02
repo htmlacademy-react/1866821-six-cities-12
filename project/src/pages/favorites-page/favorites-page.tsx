@@ -3,8 +3,7 @@ import PlaceCardList from '../../components/place-card-list/place-card-list';
 import { Offers, OffersByCity } from '../../types/offer';
 import { groupOffers } from '../../utils/favorites';
 import { useState } from 'react';
-import { Point } from '../../types/point';
-import { getPointsList } from '../../utils/points';
+import { NO_CARD_ID } from '../../const';
 
 type FavoritesPageProps = {
   offers: Offers;
@@ -14,13 +13,7 @@ type FavoritesPageProps = {
 export default function FavoritesPage({offers}: FavoritesPageProps) {
   const offersByCity: OffersByCity = groupOffers(offers);
 
-  const points = getPointsList(offers);
-
-  const [selectedPoint, setSelectedPoint] = useState<Point | undefined>(undefined);
-  const onListItemHover = (listItemName: string) => {
-    const currentPoint = points.find((point) => point.title === listItemName);
-    setSelectedPoint(currentPoint);
-  };
+  const [activeOfferId, setActiveOfferId] = useState(NO_CARD_ID);
 
   return (
     <LayoutBase withBaseHeader withBaseFooter pageTitle='6 cities' className='page--gray page--main'>
@@ -43,7 +36,7 @@ export default function FavoritesPage({offers}: FavoritesPageProps) {
                       offers={offersByCity[cityName]}
                       type='favorites'
                       classNamePrefix='favorites'
-                      onListItemHover={onListItemHover}
+                      onListItemActive={setActiveOfferId}
                     />
                   </div>
                 </li>))}

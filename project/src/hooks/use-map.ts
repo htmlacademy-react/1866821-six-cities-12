@@ -2,6 +2,8 @@ import {useEffect, useState, useRef} from 'react';
 import leaflet from 'leaflet';
 import { City } from 'types/city';
 
+const LF_LAYER_SOURCE = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
+
 const useMap = (mapRef: React.MutableRefObject<HTMLElement | null>, city: City) => {
   const [map, setMap] = useState<leaflet.Map | null>(null);
   const isRenderedRef = useRef(false);
@@ -18,7 +20,7 @@ const useMap = (mapRef: React.MutableRefObject<HTMLElement | null>, city: City) 
 
       leaflet
         .tileLayer(
-          'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+          LF_LAYER_SOURCE,
           {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
           },
