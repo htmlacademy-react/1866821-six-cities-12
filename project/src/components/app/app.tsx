@@ -31,7 +31,7 @@ function App({offers, favoriteOffers, reviews}: AppProps) {
           />
           <Route
             path={AppRoute.Room}
-            element={<RoomPage offers={offers} reviews={reviews}/>}
+            element={<RoomPage offers={offers.slice(0, 3)} reviews={reviews}/>}
           />
           <Route
             path={AppRoute.Favorites}

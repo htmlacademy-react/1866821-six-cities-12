@@ -1,6 +1,5 @@
-import { Map } from 'leaflet';
+import { Map, Icon, Marker } from 'leaflet';
 import {URL_MARKER_DEFAULT, URL_MARKER_CURRENT} from '../const';
-import {Icon, Marker } from 'leaflet';
 import {useEffect } from 'react';
 import { Offers } from 'types/offer';
 

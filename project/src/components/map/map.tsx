@@ -12,9 +12,10 @@ type MapProps = {
   city: City;
   offers: Offers;
   selectedOfferId: number | undefined;
+  isWide?: boolean;
 }
 
-export default function Map({className, city, offers, selectedOfferId}: MapProps) {
+export default function Map({className, city, offers, selectedOfferId, isWide}: MapProps) {
 
   const mapRef = useRef(null);
   const map = useMap(mapRef, city);
@@ -22,7 +23,7 @@ export default function Map({className, city, offers, selectedOfferId}: MapProps
 
   return (
     <section
-      className={cn('map', className, styles.citiesMapClean)}
+      className={cn('map', className, isWide ? styles.citiesMapLimited : styles.citiesMapClean)}
       ref={mapRef}
     >
     </section>
