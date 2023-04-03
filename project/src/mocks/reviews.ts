@@ -2,7 +2,7 @@ import { Reviews } from '../types/review';
 
 export const mockReviews: Reviews = [
   {
-    comment: 'A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam.',
+    comment: 'A 1 quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam.',
     date: new Date('Sat Mar 18 2023 07:48:54 GMT+0300 (Москва, стандартное время)'),
     id: 1,
     rating: 4,
@@ -14,7 +14,7 @@ export const mockReviews: Reviews = [
     }
   },
   {
-    comment: 'A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam.',
+    comment: 'A 2 quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam.',
     date: new Date('Sat Mar 20 2022 07:48:54 GMT+0300 (Москва, стандартное время)'),
     id: 2,
     rating: 3,
@@ -23,6 +23,18 @@ export const mockReviews: Reviews = [
       id: 4,
       isPro: false,
       name: 'Poliver.conner'
+    }
+  },
+  {
+    comment: 'A 3 quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam.',
+    date: new Date('Sat Mar 20 2022 07:48:54 GMT+0300 (Москва, стандартное время)'),
+    id: 3,
+    rating: 3,
+    user: {
+      avatarUrl: 'img/avatar-max.jpg',
+      id: 4,
+      isPro: false,
+      name: 'Holiver.monner'
     }
   }
 ];

@@ -1,4 +1,10 @@
 .citiesMapClean {
   background: unset;
-  height: 100%;
+  height: auto;
+}
+
+.citiesMapLimited {
+  background: unset;
+  max-width: 1144px;
+  margin: 0 auto 50px;
 }

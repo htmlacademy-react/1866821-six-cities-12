@@ -83,13 +83,19 @@ export default function RoomPage({offers, reviews}: RoomPageProps) {
               city={offer.city}
               offers={offers}
               selectedOfferId={activeOfferId}
+              isWide
             />
           </section>
           <div className="container">
             <section className="near-places places">
               <h2 className="near-places__title">Other places in the neighbourhood</h2>
               <div className="near-places__list places__list">
-                <PlaceCardList offers={offers} type='nearPlaces' classNamePrefix='near-places' onListItemActive={setActiveOfferId}/>
+                <PlaceCardList
+                  offers={offers}
+                  type='nearPlaces'
+                  classNamePrefix='near-places'
+                  onListItemActive={setActiveOfferId}
+                />
               </div>
             </section>
           </div>
