@@ -10,16 +10,16 @@ type ReviewsItemProps = {
 
 export default function ReviewsItem({review}: ReviewsItemProps) {
   return (
-    <li className="reviews__item" key={review.id}>
+    <li className="reviews__item">
       <div className="reviews__user user">
-        <Avatar avatarUrl={review.user.avatarUrl} type='reviews' classNamePrefix='reviews'/>
+        <Avatar avatarUrl={review.user.avatarUrl} type="reviews" classNamePrefix="reviews"/>
         <span className="reviews__user-name">
           {bringFirstCharToUpperCase(review.user.name)}
         </span>
       </div>
       <div className="reviews__info">
         <div className="reviews__rating rating">
-          <Rating rating={review.rating} className='reviews__stars'/>
+          <Rating rating={review.rating} className="reviews__stars"/>
         </div>
         <p className="reviews__text">
           {review.comment}

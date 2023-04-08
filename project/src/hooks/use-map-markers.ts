@@ -21,7 +21,7 @@ const useMapMarkers = ({map, offers, selectedOfferId}: UseMapMarkers) => {
   });
 
   useEffect(() => {
-    if (map) {
+    if (map && offers) {
       offers.forEach((offer) => {
         const marker = new Marker({
           lat: offer.location.latitude,

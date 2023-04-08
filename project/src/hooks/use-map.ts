@@ -29,7 +29,15 @@ const useMap = (mapRef: React.MutableRefObject<HTMLElement | null>, city: City) 
 
       setMap(instance);
       isRenderedRef.current = true;
+    } else {
+      map?.panTo(new leaflet
+        .LatLng(
+          city.location.latitude,
+          city.location.longitude
+        )
+      );
     }
+
   }, [mapRef, city]);
 
   return map;

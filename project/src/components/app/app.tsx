@@ -23,7 +23,7 @@ function App({offers, favoriteOffers, reviews}: AppProps) {
         <Routes>
           <Route
             path={AppRoute.Root}
-            element={<MainPage offers={offers}/>}
+            element={<MainPage />}
           />
           <Route
             path={AppRoute.Login}
@@ -31,7 +31,7 @@ function App({offers, favoriteOffers, reviews}: AppProps) {
           />
           <Route
             path={AppRoute.Room}
-            element={<RoomPage offers={offers.slice(0, 3)} reviews={reviews}/>}
+            element={<RoomPage reviews={reviews}/>}
           />
           <Route
             path={AppRoute.Favorites}
