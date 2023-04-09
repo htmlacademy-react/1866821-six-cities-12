@@ -6,9 +6,9 @@ import { useState } from 'react';
 import { NO_CARD_ID } from '../../const';
 import CitiesList from '../../components/cities-list/cities-list';
 import { useAppSelector } from '../../hooks/base';
-import { Cities } from '../../const';
 import { groupOffers } from '../../utils/favorites';
 import { bringFirstCharToUpperCase } from '../../utils/common';
+import NoPlaces from '../../components/no-places/no-places';
 
 
 export default function MainPage() {
@@ -16,7 +16,7 @@ export default function MainPage() {
 
   const city = useAppSelector((state) => state.city);
   const offers = useAppSelector((state) => state.offersList);
-  const offersOfCheckedCity = groupOffers(offers)[city.name];
+  const filteredOffers = groupOffers(offers)[city.name];
 
   return (
     <LayoutBase
@@ -26,39 +26,39 @@ export default function MainPage() {
     >
       <main className="page__main page__main--index">
         <h1 className="visually-hidden">Cities</h1>
-        <CitiesList
-          cities={Object.values(Cities)}
-          activeCity={city}
-        />
-        <div className="cities">
-          <div className="cities__places-container container">
-            <section className="cities__places places">
-              <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">
-                {offersOfCheckedCity ? offersOfCheckedCity.length : 'No'} places to stay in {bringFirstCharToUpperCase(city.name)}
-              </b>
-              {offersOfCheckedCity &&
-                <><Sort />
+        <CitiesList activeCity={city}/>
+
+        {!filteredOffers &&
+          <NoPlaces />}
+
+        {filteredOffers &&
+            <div className="cities">
+              <div className="cities__places-container container">
+                <section className="cities__places places">
+                  <h2 className="visually-hidden">Places</h2>
+                  <b className="places__found">
+                    {filteredOffers.length} places to stay in {bringFirstCharToUpperCase(city.name)}
+                  </b>
+                  <Sort />
                   <div className="cities__places-list places__list tabs__content">
                     <PlaceCardList
-                      offers={offersOfCheckedCity}
+                      offers={filteredOffers}
                       onListItemActive={setActiveOfferId}
                       classNamePrefix='cities'
                       type='cities'
                     />
                   </div>
-                </>}
-            </section>
-            <div className="cities__right-section">
-              <Map
-                className='cities__map'
-                city={city}
-                offers={offersOfCheckedCity}
-                selectedOfferId={activeOfferId}
-              />
-            </div>
-          </div>
-        </div>
+                </section>
+                <div className="cities__right-section">
+                  <Map
+                    className='cities__map'
+                    city={city}
+                    offers={filteredOffers}
+                    selectedOfferId={activeOfferId}
+                  />
+                </div>
+              </div>
+            </div>}
       </main>
     </LayoutBase>
   );

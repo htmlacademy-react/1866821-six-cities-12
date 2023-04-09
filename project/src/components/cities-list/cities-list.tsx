@@ -1,12 +1,14 @@
 import CitiesItem from '../cities-item/cities-item';
 import { City } from '../../types/city';
+import { Cities } from '../../const';
 
 type CitiesListProps = {
   activeCity: City;
-  cities: City[];
 }
 
-export default function CitiesList({cities, activeCity}: CitiesListProps) {
+export default function CitiesList({activeCity}: CitiesListProps) {
+  const cities = Object.values(Cities);
+
   return (
     <div className="tabs">
       <section className="locations container">

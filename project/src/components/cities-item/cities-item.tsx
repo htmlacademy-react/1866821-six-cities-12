@@ -10,6 +10,7 @@ type CitiesItemProps = {
 
 export default function CitiesItem({city, isActive}: CitiesItemProps) {
   const dispatch = useAppDispatch();
+
   return(
     <li className="locations__item">
       <a

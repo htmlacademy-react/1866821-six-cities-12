@@ -8,6 +8,7 @@ const useMap = (mapRef: React.MutableRefObject<HTMLElement | null>, city: City) 
   const [map, setMap] = useState<leaflet.Map | null>(null);
   const isRenderedRef = useRef(false);
 
+
   useEffect(() => {
     if (mapRef.current !== null && !isRenderedRef.current) {
       const instance = leaflet.map(mapRef?.current, {
@@ -15,7 +16,7 @@ const useMap = (mapRef: React.MutableRefObject<HTMLElement | null>, city: City) 
           lat: city.location.latitude,
           lng: city.location.longitude,
         },
-        zoom: city.location.zoom,
+        zoom: city.location.zoom
       });
 
       leaflet
@@ -23,22 +24,31 @@ const useMap = (mapRef: React.MutableRefObject<HTMLElement | null>, city: City) 
           LF_LAYER_SOURCE,
           {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-          },
+          }
         )
         .addTo(instance);
-
       setMap(instance);
       isRenderedRef.current = true;
-    } else {
-      map?.panTo(new leaflet
-        .LatLng(
-          city.location.latitude,
-          city.location.longitude
-        )
-      );
     }
 
   }, [mapRef, city]);
+
+  useEffect(() => {
+    map?.panTo(new leaflet
+      .LatLng(
+        city.location.latitude,
+        city.location.longitude
+      )
+    );
+
+    return () => {
+      map?.eachLayer((layer) => {
+        if (!layer.options.attribution) {
+          layer.remove();
+        }
+      });
+    };
+  }, [city]);
 
   return map;
 };

@@ -27,11 +27,11 @@ export default function RoomPage({reviews}: RoomPageProps) {
 
   const city = useAppSelector((state) => state.city);
   const offers = useAppSelector((state) => state.offersList);
-  const offersOfCheckedCity = groupOffers(offers)[city.name];
+  const filteredOffers = groupOffers(offers)[city.name];
 
   const navigate = useNavigate();
   const idFromParams = Number(params.id);
-  const offer = offersOfCheckedCity.find((offerItem) => offerItem.id === idFromParams);
+  const offer = filteredOffers.find((offerItem) => offerItem.id === idFromParams);
 
   if (!offer) {
     navigate(AppRoute.NotFound);
@@ -89,7 +89,7 @@ export default function RoomPage({reviews}: RoomPageProps) {
             <Map
               className='property__map'
               city={offer.city}
-              offers={offersOfCheckedCity}
+              offers={filteredOffers}
               selectedOfferId={activeOfferId}
               isWide
             />
@@ -99,7 +99,7 @@ export default function RoomPage({reviews}: RoomPageProps) {
               <h2 className="near-places__title">Other places in the neighbourhood</h2>
               <div className="near-places__list places__list">
                 <PlaceCardList
-                  offers={offersOfCheckedCity.slice(0, OFFERS_LIST_LIMIT)}
+                  offers={filteredOffers.slice(0, OFFERS_LIST_LIMIT)}
                   type='nearPlaces'
                   classNamePrefix='near-places'
                   onListItemActive={setActiveOfferId}
