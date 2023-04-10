@@ -323,8 +323,8 @@ export const mockFavoriteOffers: Offers = [
     },
     description: 'Peaceful studio in the most wanted area in town. Quiet house Near of everything. Completely renovated. Lovely neighbourhood, lot of trendy shops, restaurants and bars in a walking distance.',
     location: {
-      latitude: 51.236402000000005,
-      longitude: 6.784314,
+      latitude: 51.46402000000005,
+      longitude: 6.994314,
       zoom: 16
     },
     id: 9

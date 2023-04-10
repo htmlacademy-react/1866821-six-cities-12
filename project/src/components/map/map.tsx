@@ -16,10 +16,9 @@ type MapProps = {
 }
 
 export default function Map({className, city, offers, selectedOfferId, isWide}: MapProps) {
-
   const mapRef = useRef(null);
   const map = useMap(mapRef, city);
-  useMapMarkers({map, offers, selectedOfferId});
+  useMapMarkers({map, offers, selectedOfferId, city});
 
   return (
     <section

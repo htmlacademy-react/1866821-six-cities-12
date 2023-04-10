@@ -1,6 +1,5 @@
 import LayoutBase from '../../layouts/layout-base/layout-base';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Offers } from '../../types/offer';
 import { AppRoute } from '../../const';
 import RoomGallery from '../../components/room/room-gallery/room-gallery';
 import { bringFirstCharToUpperCase } from '../../utils/common';
@@ -14,17 +13,26 @@ import Map from '../../components/map/map';
 import PlaceCardList from '../../components/place-card-list/place-card-list';
 import { useState } from 'react';
 import { NO_CARD_ID } from '../../const';
+import { useAppSelector } from '../../hooks/base';
+import { groupOffers } from '../../utils/favorites';
 
 type RoomPageProps = {
-  offers: Offers;
   reviews: Reviews;
 }
 
-export default function RoomPage({offers, reviews}: RoomPageProps) {
+const OFFERS_LIST_LIMIT = 3;
+
+export default function RoomPage({reviews}: RoomPageProps) {
   const params = useParams();
+
+  const city = useAppSelector((state) => state.city);
+  const offers = useAppSelector((state) => state.offersList);
+  const filteredOffers = groupOffers(offers)[city.name];
+
   const navigate = useNavigate();
   const idFromParams = Number(params.id);
-  const offer = offers.find((offerItem) => offerItem.id === idFromParams);
+  const offer = filteredOffers.find((offerItem) => offerItem.id === idFromParams);
+
   if (!offer) {
     navigate(AppRoute.NotFound);
   }
@@ -81,7 +89,7 @@ export default function RoomPage({offers, reviews}: RoomPageProps) {
             <Map
               className='property__map'
               city={offer.city}
-              offers={offers}
+              offers={filteredOffers}
               selectedOfferId={activeOfferId}
               isWide
             />
@@ -91,7 +99,7 @@ export default function RoomPage({offers, reviews}: RoomPageProps) {
               <h2 className="near-places__title">Other places in the neighbourhood</h2>
               <div className="near-places__list places__list">
                 <PlaceCardList
-                  offers={offers}
+                  offers={filteredOffers.slice(0, OFFERS_LIST_LIMIT)}
                   type='nearPlaces'
                   classNamePrefix='near-places'
                   onListItemActive={setActiveOfferId}
