@@ -1,4 +1,5 @@
 import { CitiesMap } from 'types/city';
+import { SortType } from 'types/sort';
 
 export enum AppRoute {
   Root = '/',
@@ -77,4 +78,22 @@ export const Cities: CitiesMap = {
       zoom: 13
     }
   },
+};
+
+export const SortKinds: SortType = {
+  POPULAR: 'Popular',
+  PRICE_HIGH: 'Price: low to high',
+  PRICE_LOW: 'Price: high to low',
+  RATED_FIRST: 'Top rated first'
+} as const;
+
+
+export const SortDirection = {
+  UP: 1,
+  LOW: -1
+};
+
+export const SortField = {
+  RATING: 'rating',
+  PRICE: 'price'
 };

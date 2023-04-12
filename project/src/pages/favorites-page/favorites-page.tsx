@@ -1,7 +1,7 @@
 import LayoutBase from '../../layouts/layout-base/layout-base';
 import PlaceCardList from '../../components/place-card-list/place-card-list';
 import { Offers, OffersByCity } from '../../types/offer';
-import { groupOffers } from '../../utils/favorites';
+import { groupOffers } from '../../utils/offers';
 import { useState } from 'react';
 import { NO_CARD_ID } from '../../const';
 

@@ -14,7 +14,7 @@ import PlaceCardList from '../../components/place-card-list/place-card-list';
 import { useState } from 'react';
 import { NO_CARD_ID } from '../../const';
 import { useAppSelector } from '../../hooks/base';
-import { groupOffers } from '../../utils/favorites';
+import { groupOffers } from '../../utils/offers';
 
 type RoomPageProps = {
   reviews: Reviews;

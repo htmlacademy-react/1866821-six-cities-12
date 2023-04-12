@@ -2,7 +2,7 @@ import 'leaflet/dist/leaflet.css';
 import styles from './map.module.css';
 import cn from 'classnames';
 import { City } from '../../types/city';
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import useMap from '../../hooks/use-map';
 import useMapMarkers from '../../hooks/use-map-markers';
 import { Offers } from 'types/offer';
@@ -18,7 +18,14 @@ type MapProps = {
 export default function Map({className, city, offers, selectedOfferId, isWide}: MapProps) {
   const mapRef = useRef(null);
   const map = useMap(mapRef, city);
-  useMapMarkers({map, offers, selectedOfferId, city});
+  useMapMarkers({map, offers, selectedOfferId});
+
+  useEffect(() => {
+    map?.panTo({
+      lat: city.location.latitude,
+      lng: city.location.longitude
+    });
+  }, [city, map]);
 
   return (
     <section
