@@ -6,7 +6,7 @@ import Rating from '../rating/rating';
 type PlaceCardProps = {
   classNamePrefix: string;
   offer: Offer;
-  onCardActive: (cardId: number) => void;
+  onCardActive?: (cardId: number) => void;
   type: OffersList;
 }
 
@@ -30,7 +30,7 @@ export default function PlaceCard({classNamePrefix, offer, onCardActive, type}: 
   const size = imageSizes[type];
 
   return (
-    <article className={`${classNamePrefix}__card place-card`} onMouseOver={() => onCardActive(offer.id)}>
+    <article className={`${classNamePrefix}__card place-card`} onMouseOver={() => onCardActive && onCardActive(offer.id)}>
       <div className="place-card__mark">
         <span>Premium</span>
       </div>

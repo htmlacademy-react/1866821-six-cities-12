@@ -1,3 +1,4 @@
+import cn from 'classnames';
 import Map from '../../components/map/map';
 import PlaceCardList from '../../components/place-card-list/place-card-list';
 import Sort from '../../components/sort/sort/sort';
@@ -15,10 +16,11 @@ export default function MainPage() {
   const [activeOfferId, setActiveOfferId] = useState(NO_CARD_ID);
 
   const city = useAppSelector((state) => state.city);
-  const sortKind = useAppSelector((state) => state.sortType);
+  const sortType = useAppSelector((state) => state.sortType);
   const offers = useAppSelector((state) => state.offersList);
   const filteredOffers = groupOffers(offers)[city.name];
-  const sortedOffers = sortOffers(sortKind, filteredOffers ?? []);
+  const sortedOffers = sortOffers(sortType, filteredOffers ?? []);
+  const mainEmptyClassName = !filteredOffers ? 'page__main--index-empty' : '';
 
   return (
     <LayoutBase
@@ -26,7 +28,7 @@ export default function MainPage() {
       pageTitle='6 cities'
       className='page--gray page--main'
     >
-      <main className="page__main page__main--index">
+      <main className={cn('page__main', 'page__main--index', mainEmptyClassName)}>
         <h1 className="visually-hidden">Cities</h1>
         <CitiesList activeCity={city}/>
 
@@ -41,7 +43,7 @@ export default function MainPage() {
                   <b className="places__found">
                     {filteredOffers.length} places to stay in {bringFirstCharToUpperCase(city.name)}
                   </b>
-                  <Sort currentSort={sortKind}/>
+                  <Sort currentSort={sortType}/>
                   <div className="cities__places-list places__list tabs__content">
                     <PlaceCardList
                       offers={sortedOffers}

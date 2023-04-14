@@ -13,8 +13,6 @@ type FavoritesPageProps = {
 export default function FavoritesPage({offers}: FavoritesPageProps) {
   const offersByCity: OffersByCity = groupOffers(offers);
 
-  const [activeOfferId, setActiveOfferId] = useState(NO_CARD_ID);
-
   return (
     <LayoutBase withBaseHeader withBaseFooter pageTitle='6 cities' className='page--gray page--main'>
       <main className="page__main page__main--favorites">
@@ -36,7 +34,6 @@ export default function FavoritesPage({offers}: FavoritesPageProps) {
                       offers={offersByCity[cityName]}
                       type='favorites'
                       classNamePrefix='favorites'
-                      onListItemActive={setActiveOfferId}
                     />
                   </div>
                 </li>))}
