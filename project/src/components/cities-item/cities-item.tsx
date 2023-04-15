@@ -1,7 +1,7 @@
 import cn from 'classnames';
 import { City } from '../../types/city';
 import {useAppDispatch} from '../../hooks/base';
-import { changeCity } from '../../store/action';
+import { changeCity } from '../../store/actions';
 
 type CitiesItemProps = {
   city: City;
