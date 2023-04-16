@@ -1,6 +1,6 @@
 import { Review } from '../../../types/review';
 import { bringFirstCharToUpperCase } from '../../../utils/common';
-import Avatar from '../avatar/avatar';
+import Avatar from '../../avatar/avatar';
 import Rating from '../../rating/rating';
 import { bringToSimpleDate, bringToViewDate } from '../../../utils/date';
 

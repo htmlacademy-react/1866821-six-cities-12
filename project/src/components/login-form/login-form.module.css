@@ -1,0 +1,21 @@
+.error {
+  border: 2px solid #FF0000;
+  outline: none !important;
+}
+
+.errorBlock {
+  display: block;
+  position: absolute;
+  color: #FF0000;
+  font-size: 14px;
+  bottom: 3px;
+}
+
+.btnErrorBlock {
+  bottom: auto;
+  top: 105%;
+}
+
+.inputWrapPositioned {
+  position: relative;
+}
