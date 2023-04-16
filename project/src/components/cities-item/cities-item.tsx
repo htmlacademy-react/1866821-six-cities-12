@@ -1,7 +1,7 @@
 import cn from 'classnames';
 import { City } from '../../types/city';
 import {useAppDispatch} from '../../hooks/base';
-import { setCity } from '../../store/action';
+import { changeCity } from '../../store/actions';
 
 type CitiesItemProps = {
   city: City;
@@ -14,7 +14,7 @@ export default function CitiesItem({city, isActive}: CitiesItemProps) {
   return(
     <li className="locations__item">
       <a
-        onClick={() => dispatch(setCity({city}))}
+        onClick={() => dispatch(changeCity({city}))}
         className={cn(isActive && 'tabs__item--active', 'locations__item-link', 'tabs__item')}
         href="#/"
       >

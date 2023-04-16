@@ -2,26 +2,26 @@ import cn from 'classnames';
 import { useAppDispatch } from '../../../hooks/base';
 import { SortType } from '../../../types/sort';
 import { SortKinds } from '../../../const';
-import { sortOffers } from '../../../store/action';
+import { changeSort } from '../../../store/actions';
 
 type SortOptionsItemProps = {
-  sortKind: keyof SortType;
-  checked?: boolean;
+  sortType: keyof SortType;
+  className?: string;
   onOptionClick: (placesListIsOpen: boolean) => void;
 }
 
-export default function SortOptionsItem({sortKind, checked, onOptionClick}: SortOptionsItemProps) {
+export default function SortOptionsItem({sortType, className, onOptionClick}: SortOptionsItemProps) {
   const dispatch = useAppDispatch();
   return (
     <li
-      className={cn('places__option', 'places', checked ? 'places__option--active' : '')}
+      className={cn('places__option', 'places', className)}
       tabIndex={0}
       onClick={() => {
         onOptionClick(false);
-        dispatch(sortOffers({sortKind}));
+        dispatch(changeSort({sortType}));
       }}
     >
-      {SortKinds[sortKind]}
+      {SortKinds[sortType]}
     </li>
   );
 }

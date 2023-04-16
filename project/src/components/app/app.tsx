@@ -11,12 +11,11 @@ import { Offers } from '../../types/offer';
 import { Reviews } from '../../types/review';
 
 type AppProps = {
-  offers: Offers;
   favoriteOffers: Offers;
   reviews: Reviews;
 }
 
-function App({offers, favoriteOffers, reviews}: AppProps) {
+function App({favoriteOffers, reviews}: AppProps) {
   return (
     <HelmetProvider>
       <BrowserRouter>

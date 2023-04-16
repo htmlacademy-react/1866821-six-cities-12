@@ -5,7 +5,7 @@ type PlaceCardListProps = {
   offers: Offers;
   classNamePrefix: string;
   type: OffersList;
-  onListItemActive: (cardId: number) => void;
+  onListItemActive?: (cardId: number) => void;
 }
 
 export default function PlaceCardList({offers, classNamePrefix, type, onListItemActive}: PlaceCardListProps) {
