@@ -1,5 +1,5 @@
 import { bringFirstCharToUpperCase } from '../../../utils/common';
-import Avatar from '../avatar/avatar';
+import Avatar from '../../avatar/avatar';
 
 type RoomHostProps = {
   name: string;

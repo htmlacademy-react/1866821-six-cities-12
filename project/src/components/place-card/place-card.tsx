@@ -31,9 +31,10 @@ export default function PlaceCard({classNamePrefix, offer, onCardActive, type}: 
 
   return (
     <article className={`${classNamePrefix}__card place-card`} onMouseOver={() => onCardActive && onCardActive(offer.id)}>
+      {offer.isPremium &&
       <div className="place-card__mark">
         <span>Premium</span>
-      </div>
+      </div>}
       <div className={`${classNamePrefix}__image-wrapper place-card__image-wrapper`}>
         <a href="#/">
           <img className="place-card__image" src={offer.previewImage} width={size.width} height={size.height} alt="Place" />

@@ -5,10 +5,11 @@ import { mockFavoriteOffers } from './mocks/favorites';
 import { mockReviews } from './mocks/reviews';
 import {Provider} from 'react-redux';
 import {store} from './store';
-import { fetchOffersAction } from './store/api-actions';
+import { checkAuthAction, fetchOffersAction } from './store/api-actions';
 import {ToastContainer} from 'react-toastify';
 
 store.dispatch(fetchOffersAction());
+store.dispatch(checkAuthAction());
 
 const root = ReactDOM.createRoot(
   document.querySelector('#root') as HTMLElement,
@@ -16,7 +17,7 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <Provider store = {store}>
+    <Provider store={store}>
       <ToastContainer />
       <App
         favoriteOffers={mockFavoriteOffers}

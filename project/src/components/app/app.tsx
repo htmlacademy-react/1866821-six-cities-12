@@ -1,6 +1,6 @@
 import {Route, BrowserRouter, Routes} from 'react-router-dom';
 import {HelmetProvider} from 'react-helmet-async';
-import {AppRoute, AuthorizationStatus} from '../../const';
+import {AppRoute, AuthorizationStatus } from '../../const';
 import MainPage from '../../pages/main-page/main-page';
 import LoginPage from '../../pages/login-page/login-page';
 import FavoritesPage from '../../pages/favorites-page/favorites-page';
@@ -9,6 +9,8 @@ import RoomPage from '../../pages/room-page/room-page';
 import PrivateRoute from '../private-route/private-route';
 import { Offers } from '../../types/offer';
 import { Reviews } from '../../types/review';
+import { useAppSelector } from '../../hooks/base';
+import Spinner from '../../components/spinner/spinner';
 
 type AppProps = {
   favoriteOffers: Offers;
@@ -16,6 +18,15 @@ type AppProps = {
 }
 
 function App({favoriteOffers, reviews}: AppProps) {
+
+  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+
+  if (authorizationStatus === AuthorizationStatus.Unknown) {
+    return (
+      <Spinner />
+    );
+  }
+
   return (
     <HelmetProvider>
       <BrowserRouter>
@@ -36,7 +47,7 @@ function App({favoriteOffers, reviews}: AppProps) {
             path={AppRoute.Favorites}
             element={
               <PrivateRoute
-                authorizationStatus={AuthorizationStatus.Auth}
+                authorizationStatus={authorizationStatus}
               >
                 <FavoritesPage offers={favoriteOffers}/>
               </PrivateRoute>
