@@ -3,7 +3,6 @@ import { useAppDispatch, useAppSelector } from '../../hooks/base';
 import styles from './login-form.module.css';
 import cn from 'classnames';
 import { loginAction } from '../../store/api-actions';
-import { AuthData } from 'types/auth-data';
 import { StatusCodes } from 'http-status-codes';
 import { AppRoute, AuthorizationStatus } from '../../const';
 import { useNavigate } from 'react-router-dom';
@@ -20,6 +19,7 @@ const serverErrorText = 'Ошибка, попробуйте позже';
 type Field = {
   value: string;
   regex: RegExp;
+  touched: boolean;
   error: boolean;
   errorMessage: string;
 }
@@ -38,12 +38,14 @@ export default function LoginForm() {
     email: {
       value: '',
       error: false,
+      touched: false,
       regex: emailRegexPattern,
       errorMessage: 'email error'
     },
     password: {
       value: '',
       error: false,
+      touched: false,
       regex: passwordRegexPattern,
       errorMessage: 'password error'
     },
@@ -57,27 +59,24 @@ export default function LoginForm() {
       ...formData,
       [name]: {
         ...formData[name],
-        value: !isError ? evt.target.value : formData[name].value,
+        value: value,
+        touched: true,
         error: isError
       }
     });
   };
 
-  const onSubmit = (authData: AuthData) => {
-    dispatch(loginAction(authData));
-  };
 
   const handleFormSubmit = (evt: FormEvent) => {
     evt.preventDefault();
 
-    const formDataMap = new Map(Object.entries(formData));
     let hasEmtyFields = false;
     let hasErrors = false;
-    const formDataClone: Record<string, Field> = {...formData};
+    const newFormData = {...formData};
 
-    for(const name of formDataMap.keys()) {
+    for(const name of Object.keys(formData)) {
       if (formData[name].value === '') {
-        formData[name].error = true;
+        newFormData[name].error = true;
         hasEmtyFields = true;
       }
       if (formData[name].error) {
@@ -86,14 +85,15 @@ export default function LoginForm() {
     }
 
     if (hasEmtyFields || hasErrors) {
-      setFormData({...formDataClone});
+      setFormData({...newFormData});
       return;
     }
 
-    onSubmit({
+
+    dispatch(loginAction({
       login: formData.email.value,
       password: formData.password.value
-    });
+    }));
   };
 
   return (
