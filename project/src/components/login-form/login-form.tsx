@@ -1,11 +1,12 @@
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks/base';
 import styles from './login-form.module.css';
 import cn from 'classnames';
 import { loginAction } from '../../store/api-actions';
-import { StatusCodes } from 'http-status-codes';
-import { AppRoute, AuthorizationStatus } from '../../const';
+import { AppRoute, AuthorizationStatus, FetchStatus } from '../../const';
 import { useNavigate } from 'react-router-dom';
+import { getAuthorizationLoadStatus, getAuthorizationStatus } from '../../store/user-process/user-process.selectors';
+import { resetAuthLoadStatus } from '../../store/user-process/user-process.slice';
 
 const LoginFields: Record<string, string> = {
   email: 'E-mail',
@@ -26,13 +27,18 @@ type Field = {
 
 export default function LoginForm() {
   const dispatch = useAppDispatch();
+  const [touched, setTouched] = useState(false);
   const navigate = useNavigate();
-  const serverError = useAppSelector((state) => state.error);
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const authStatus = useAppSelector(getAuthorizationStatus);
+  const authloadStatus = useAppSelector(getAuthorizationLoadStatus);
 
-  if (authorizationStatus === AuthorizationStatus.Auth) {
+  if (authStatus === AuthorizationStatus.Auth) {
     navigate(AppRoute.Root);
   }
+
+  useEffect(() => {
+    dispatch(resetAuthLoadStatus)
+  }, []);
 
   const [formData, setFormData] = useState<Record<string, Field>>({
     email: {
@@ -48,13 +54,13 @@ export default function LoginForm() {
       touched: false,
       regex: passwordRegexPattern,
       errorMessage: 'password error'
-    },
+    }
   });
 
   const handleInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
     const {name, value} = evt.target;
     const isError = !formData[name].regex.test(value);
-
+    setTouched(true);
     setFormData({
       ...formData,
       [name]: {
@@ -69,7 +75,7 @@ export default function LoginForm() {
 
   const handleFormSubmit = (evt: FormEvent) => {
     evt.preventDefault();
-
+    setTouched(true);
     let hasEmtyFields = false;
     let hasErrors = false;
     const newFormData = {...formData};
@@ -118,12 +124,16 @@ export default function LoginForm() {
           </div>);}
       )}
 
-      <button className="login__submit form__submit button" type="submit">Sign in</button>
-      {serverError && serverError.code !== StatusCodes.UNAUTHORIZED && (
+      <button
+        className="login__submit form__submit button"
+        type="submit"
+      >
+        Sign in
+      </button>
+      {(touched && authloadStatus.isError) &&
         <span className={cn(styles.errorBlock, styles.btnErrorBlock)}>
           {serverErrorText}
-        </span>
-      )}
+        </span>}
     </form>
   );
 }

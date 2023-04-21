@@ -1,6 +1,20 @@
 import { CitiesMap } from 'types/city';
 import { SortType } from 'types/sort';
 
+export enum FetchStatus {
+  Idle = 'Idle',
+  Loading = 'Loading',
+  Success = 'Success',
+  Failed = 'Faild'
+}
+
+export enum NameSpace {
+  Aside = 'ASIDE',
+  Offers = 'OFFERS',
+  User = 'USER',
+  Room = 'ROOM'
+}
+
 export enum AppRoute {
   Root = '/',
   Login = '/login',

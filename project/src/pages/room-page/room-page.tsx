@@ -15,6 +15,8 @@ import { useState } from 'react';
 import { NO_CARD_ID } from '../../const';
 import { useAppSelector } from '../../hooks/base';
 import { groupOffers } from '../../utils/offers';
+import { getCity } from '../../store/aside-process/aside-process.selectors';
+import { getOffers } from '../../store/offers-process/offers-process.selectors';
 
 type RoomPageProps = {
   reviews: Reviews;
@@ -25,8 +27,8 @@ const OFFERS_LIST_LIMIT = 3;
 export default function RoomPage({reviews}: RoomPageProps) {
   const params = useParams();
 
-  const city = useAppSelector((state) => state.city);
-  const offers = useAppSelector((state) => state.offersList);
+  const city = useAppSelector(getCity);
+  const offers = useAppSelector(getOffers);
   const filteredOffers = groupOffers(offers)[city.name];
 
   const navigate = useNavigate();

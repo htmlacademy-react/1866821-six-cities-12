@@ -10,7 +10,7 @@ import PrivateRoute from '../private-route/private-route';
 import { Offers } from '../../types/offer';
 import { Reviews } from '../../types/review';
 import { useAppSelector } from '../../hooks/base';
-import Spinner from '../../components/spinner/spinner';
+import { getAuthorizationStatus } from '../../store/user-process/user-process.selectors';
 
 type AppProps = {
   favoriteOffers: Offers;
@@ -19,13 +19,8 @@ type AppProps = {
 
 function App({favoriteOffers, reviews}: AppProps) {
 
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
 
-  if (authorizationStatus === AuthorizationStatus.Unknown) {
-    return (
-      <Spinner />
-    );
-  }
 
   return (
     <HelmetProvider>
