@@ -4,7 +4,7 @@ import PlaceCardList from '../../components/place-card-list/place-card-list';
 import Sort from '../../components/sort/sort/sort';
 import LayoutBase from '../../layouts/layout-base/layout-base';
 import { useEffect, useState } from 'react';
-import { FetchStatus, NO_CARD_ID } from '../../const';
+import { NO_CARD_ID } from '../../const';
 import CitiesList from '../../components/cities-list/cities-list';
 import { useAppDispatch, useAppSelector } from '../../hooks/base';
 import { groupOffers, sortOffers } from '../../utils/offers';
@@ -12,7 +12,7 @@ import { bringFirstCharToUpperCase } from '../../utils/common';
 import NoPlaces from '../../components/no-places/no-places';
 import Spinner from '../../components/spinners/spinner/spinner';
 import { getCity, getSort } from '../../store/aside-process/aside-process.selectors';
-import { getOffers, getOffersLoadStatus, getOffersStatus } from '../../store/offers-process/offers-process.selectors';
+import { getOffers, getOffersLoadStatus } from '../../store/offers-process/offers-process.selectors';
 import { checkAuthAction, fetchOffersAction } from '../../store/api-actions';
 import ErrorFullScreen from '../../components/error-fullscreen/error-fullscreen';
 

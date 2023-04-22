@@ -2,7 +2,6 @@ import { Offer, OffersList } from '../../types/offer';
 import { bringFirstCharToUpperCase } from '../../utils/common';
 import { Link } from 'react-router-dom';
 import Rating from '../rating/rating';
-import { useState } from 'react';
 
 type PlaceCardProps = {
   classNamePrefix: string;

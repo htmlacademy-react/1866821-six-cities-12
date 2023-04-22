@@ -8,7 +8,6 @@ type SignProps = {
 }
 
 export default function Sign({isAuthorized}: SignProps) {
-
   const signClassName = isAuthorized ? 'header__signout' : 'header__login';
   const signText = isAuthorized ? 'Sign out' : 'Sign in';
   const dispatch = useAppDispatch();
@@ -17,7 +16,9 @@ export default function Sign({isAuthorized}: SignProps) {
     <li className="header__nav-item">
       <Link className="header__nav-link"
         to={AppRoute.Login}
-        onClick={() => {isAuthorized && dispatch(logoutAction());}}
+        onClick={() => {
+          isAuthorized && dispatch(logoutAction());
+        }}
       >
         <span className={signClassName}>{signText}</span>
       </Link>

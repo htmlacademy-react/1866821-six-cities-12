@@ -12,7 +12,7 @@ export enum NameSpace {
   Aside = 'ASIDE',
   Offers = 'OFFERS',
   User = 'USER',
-  Room = 'ROOM'
+  Comments = 'COMMENTS'
 }
 
 export enum AppRoute {

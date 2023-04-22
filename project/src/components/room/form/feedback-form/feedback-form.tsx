@@ -1,43 +1,91 @@
 import { FormEventHandler, useState } from 'react';
 import { ChangeEventHandlerCommon } from '../../../../types/handlers';
-import { Reviews } from '../../../../types/review';
 import FeedbackRating from '../feedback-rating/feedback-rating';
-import { ReviewData } from 'types/review-data';
+import { useAppDispatch, useAppSelector } from '../../../../hooks/base';
+import { addCommentAction } from '../../../../store/api-actions';
+import styles from './feedback-form.module.css';
+import cn from 'classnames';
+import { getCommentAddLoadStatus } from '../../../../store/commets-process/commets-process.selectors';
+
+const COMMNET_MIN_LENGTH = 50;
 
 type FeedbackFormProps = {
-  reviews: Reviews;
-  hotelId?: number;
+  hotelId: number;
 }
 
-export default function FeedbackForm({reviews, hotelId = 1}: FeedbackFormProps) {
-  const [formData, setFromData] = useState<ReviewData>({
+type Field = {
+  hotelId: number;
+  comment: string;
+  rating: number;
+  error: boolean;
+  errorMessage: string;
+  touched: boolean;
+}
+
+export default function FeedbackForm({hotelId}: FeedbackFormProps) {
+  const dispatch = useAppDispatch();
+  const commentsAddloadStatus = useAppSelector(getCommentAddLoadStatus);
+
+  const [formData, setFromData] = useState<Field>({
     hotelId,
-    review: '',
-    rating: 0
+    comment: '',
+    rating: 1,
+    error: true,
+    errorMessage: 'Minimum 50 characters',
+    touched: false
   });
+
+
+  const fieldFocusHandler = () => {
+    setFromData({
+      ...formData,
+      touched: true
+    });
+  };
 
   const fieldChangeHandle: ChangeEventHandlerCommon = (evt) => {
     const {name, value} = evt.target;
-    setFromData({...formData, [name]: value});
+    const isError = (formData.comment.length < COMMNET_MIN_LENGTH);
+
+    setFromData({
+      ...formData,
+      hotelId,
+      [name]: value,
+      error: isError,
+    });
   };
 
   const submitFormHandle: FormEventHandler<HTMLFormElement> = (evt) => {
     evt.preventDefault();
-    console.log(formData)
+
+    if (formData.error) {
+      return;
+    }
+
+    dispatch(addCommentAction(formData));
+    setFromData({
+      ...formData,
+      hotelId,
+      comment: '',
+      rating: 0
+    });
   };
 
+  const commentErrorClassName = (formData.error && formData.touched) ? styles.error : '';
 
   return (
     <form onSubmit={submitFormHandle} className="reviews__form form" action="#" method="post">
       <label className="reviews__label form__label" htmlFor="review">Your review</label>
-      <FeedbackRating onRatingChange={fieldChangeHandle}/>
+      <FeedbackRating onRatingChange={fieldChangeHandle} checkedRating={formData.rating}/>
       <textarea
+        onFocus={fieldFocusHandler}
         onChange={fieldChangeHandle}
-        value={formData.review}
-        className="reviews__textarea form__textarea"
+        value={formData.comment}
+        className={cn('reviews__textarea', 'form__textarea', commentErrorClassName)}
         id="review"
-        name="review"
+        name="comment"
         placeholder="Tell how was your stay, what you like and what can be improved"
+        disabled={commentsAddloadStatus.isLoading}
       >
       </textarea>
       <div className="reviews__button-wrapper">
@@ -47,8 +95,15 @@ export default function FeedbackForm({reviews, hotelId = 1}: FeedbackFormProps) 
           and describe your stay with at least{' '}
           <b className="reviews__text-amount">50 characters</b>.
         </p>
-        <button className="reviews__submit form__submit button" type="submit" disabled={false}>Submit</button>
+        <button
+          className="reviews__submit form__submit button"
+          type="submit"
+          disabled={(commentsAddloadStatus.isLoading || formData.error) || commentsAddloadStatus.isError}
+        >
+          Submit
+        </button>
       </div>
+      {commentsAddloadStatus.isError && <span>Ошибка, попробуйте позже, отзыв не добавлен</span>}
     </form>
   );
 }

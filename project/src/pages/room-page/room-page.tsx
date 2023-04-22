@@ -7,15 +7,19 @@ import Rating from '../../components/rating/rating';
 import RoomFeatures from '../../components/room/room-features/room-features';
 import RoomGoods from '../../components/room/room-goods/room-goods';
 import RoomHost from '../../components/room/room-host/room-host';
-import { Reviews } from '../../types/review';
 import RoomReviews from '../../components/room/room-reviews/room-reviews';
 import Map from '../../components/map/map';
 import PlaceCardList from '../../components/place-card-list/place-card-list';
 import { useEffect, useState } from 'react';
 import { NO_CARD_ID } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks/base';
-import { fetchCommentsAction, fetchOfferAction, fetchOffersNearAction } from '../../store/api-actions';
-import { getComments, getCommentsLoadStatus, getOffer, getOfferLoadStatus, getOfferStatus, getOffersNearBy, getOffersNearLoadStatus } from '../../store/room-process/room-process.selectors';
+import { checkAuthAction, fetchCommentsAction, fetchOfferAction, fetchOffersAction, } from '../../store/api-actions';
+import { getOffer, getOfferLoadStatus, getOffers, getOffersLoadStatus } from '../../store/offers-process/offers-process.selectors';
+import { getComments, getCommentsLoadStatus } from '../../store/commets-process/commets-process.selectors';
+import { changeHotelId } from '../../store/aside-process/aside-process.slice';
+import { getAuthorizationStatus } from '../../store/user-process/user-process.selectors';
+import ErrorFullScreen from '../../components/error-fullscreen/error-fullscreen';
+import Spinner from '../../components/spinners/spinner/spinner';
 
 
 const OFFERS_LIST_LIMIT = 3;
@@ -32,12 +36,13 @@ export default function RoomPage() {
   const idFromParams = Number(params.id);
 
   const offer = useAppSelector(getOffer);
+  const offers = useAppSelector(getOffers);
+  const offerLoadStatus = useAppSelector(getOfferLoadStatus);
   const offerStatus = useAppSelector(getOfferLoadStatus);
-  const offers = useAppSelector(getOffersNearBy);
-  const offersStatus = useAppSelector(getOffersNearLoadStatus);
+  const offersLoadStatus = useAppSelector(getOffersLoadStatus);
   const reviews = useAppSelector(getComments);
-  const reviewsStatus = useAppSelector(getCommentsLoadStatus);
-
+  const reviewsLoadStatus = useAppSelector(getCommentsLoadStatus);
+  const authStatus = useAppSelector(getAuthorizationStatus);
 
   if (offerStatus.isError) {
     navigate(AppRoute.NotFound);
@@ -46,14 +51,23 @@ export default function RoomPage() {
   useEffect(() => {
     dispatch(fetchOfferAction(idFromParams));
     dispatch(fetchCommentsAction(idFromParams));
-    dispatch(fetchOffersNearAction(idFromParams));
+    dispatch(fetchOffersAction({offerId: idFromParams}));
+    dispatch(changeHotelId(idFromParams));
+    dispatch(checkAuthAction());
   }, [dispatch, idFromParams]);
 
   useEffect(() => {
     window.scrollTo(ScrollParameters);
+    dispatch(changeHotelId(idFromParams));
   }, [idFromParams]);
 
   const [activeOfferId, setActiveOfferId] = useState(NO_CARD_ID);
+
+  if(offerLoadStatus.isError) {
+    return (
+      <ErrorFullScreen />
+    );
+  }
 
   return (
     <div>
@@ -99,7 +113,9 @@ export default function RoomPage() {
                   avatarUrl={offer.host.avatarUrl}
                   description={offer.description}
                 />
-                <RoomReviews reviews={reviews}/>
+                {reviewsLoadStatus.isLoading && <Spinner />}
+                {reviewsLoadStatus.isSuccess && <RoomReviews reviews={reviews} isAuthorized={authStatus.auth}/>}
+                {reviewsLoadStatus.isError && <span>Ошибка загрузки отзывов</span>}
               </div>
             </div>
             <Map
@@ -111,6 +127,8 @@ export default function RoomPage() {
             />
           </section>
           <div className="container">
+            {offersLoadStatus.isError && <Spinner />}
+            {offersLoadStatus.isSuccess &&
             <section className="near-places places">
               <h2 className="near-places__title">Other places in the neighbourhood</h2>
               <div className="near-places__list places__list">
@@ -121,7 +139,8 @@ export default function RoomPage() {
                   onListItemActive={setActiveOfferId}
                 />
               </div>
-            </section>
+            </section>}
+            {offersLoadStatus.isError && <span>Ошибка загрузки предложений по аренде</span>}
           </div>
         </main>
       </LayoutBase>}

@@ -1,16 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { FetchStatus, NameSpace } from '../../const';
-import { fetchOffersAction } from '../api-actions';
-import { Offers } from 'types/offer';
+import { fetchOfferAction, fetchOffersAction } from '../api-actions';
+import { Offer, Offers } from 'types/offer';
 
 export type OffersProcess = {
   offersList: Offers;
   offersLoadStatus: FetchStatus;
+  offer: Offer | null;
+  offerLoadStatus: FetchStatus;
 }
 
 const initialState: OffersProcess = {
   offersList: [],
   offersLoadStatus: FetchStatus.Idle,
+  offer: null,
+  offerLoadStatus: FetchStatus.Idle,
 };
 
 export const offersProcess = createSlice({
@@ -19,6 +23,17 @@ export const offersProcess = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder
+      .addCase(fetchOfferAction.pending, (state) => {
+        state.offerLoadStatus = FetchStatus.Loading;
+      })
+      .addCase(fetchOfferAction.fulfilled, (state, action) => {
+        state.offer = action.payload;
+        state.offerLoadStatus = FetchStatus.Success;
+      })
+      .addCase(fetchOfferAction.rejected, (state) => {
+        state.offerLoadStatus = FetchStatus.Failed;
+      })
+
       .addCase(fetchOffersAction.pending, (state) => {
         state.offersLoadStatus = FetchStatus.Loading;
       })

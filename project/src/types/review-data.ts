@@ -1,5 +1,5 @@
 export type ReviewData = {
   hotelId: number;
-  review: string;
+  comment: string;
   rating: number;
 };

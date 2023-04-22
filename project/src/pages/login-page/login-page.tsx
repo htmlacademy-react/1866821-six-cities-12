@@ -3,6 +3,7 @@ import LoginForm from '../../components/login-form/login-form';
 import LayoutBase from '../../layouts/layout-base/layout-base';
 
 export default function LoginPage() {
+
   return (
     <LayoutBase pageTitle="login" className="page--gray page--login">
       <>
