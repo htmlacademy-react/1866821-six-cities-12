@@ -2,14 +2,16 @@ import { FormEventHandler, useState } from 'react';
 import { ChangeEventHandlerCommon } from '../../../../types/handlers';
 import { Reviews } from '../../../../types/review';
 import FeedbackRating from '../feedback-rating/feedback-rating';
+import { ReviewData } from 'types/review-data';
 
 type FeedbackFormProps = {
   reviews: Reviews;
+  hotelId?: number;
 }
 
-export default function FeedbackForm({reviews}: FeedbackFormProps) {
-  const [formData, setFromData] = useState({
-    userId: 0,
+export default function FeedbackForm({reviews, hotelId = 1}: FeedbackFormProps) {
+  const [formData, setFromData] = useState<ReviewData>({
+    hotelId,
     review: '',
     rating: 0
   });
@@ -21,6 +23,7 @@ export default function FeedbackForm({reviews}: FeedbackFormProps) {
 
   const submitFormHandle: FormEventHandler<HTMLFormElement> = (evt) => {
     evt.preventDefault();
+    console.log(formData)
   };
 
 
@@ -44,7 +47,7 @@ export default function FeedbackForm({reviews}: FeedbackFormProps) {
           and describe your stay with at least{' '}
           <b className="reviews__text-amount">50 characters</b>.
         </p>
-        <button className="reviews__submit form__submit button" type="submit" disabled>Submit</button>
+        <button className="reviews__submit form__submit button" type="submit" disabled={false}>Submit</button>
       </div>
     </form>
   );

@@ -11,33 +11,47 @@ import { Reviews } from '../../types/review';
 import RoomReviews from '../../components/room/room-reviews/room-reviews';
 import Map from '../../components/map/map';
 import PlaceCardList from '../../components/place-card-list/place-card-list';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { NO_CARD_ID } from '../../const';
-import { useAppSelector } from '../../hooks/base';
-import { groupOffers } from '../../utils/offers';
-import { getCity } from '../../store/aside-process/aside-process.selectors';
-import { getOffers } from '../../store/offers-process/offers-process.selectors';
+import { useAppDispatch, useAppSelector } from '../../hooks/base';
+import { fetchCommentsAction, fetchOfferAction, fetchOffersNearAction } from '../../store/api-actions';
+import { getComments, getCommentsLoadStatus, getOffer, getOfferLoadStatus, getOfferStatus, getOffersNearBy, getOffersNearLoadStatus } from '../../store/room-process/room-process.selectors';
 
-type RoomPageProps = {
-  reviews: Reviews;
-}
 
 const OFFERS_LIST_LIMIT = 3;
+const ScrollParameters: ScrollToOptions = {
+  top: 0,
+  behavior: 'smooth'
+};
 
-export default function RoomPage({reviews}: RoomPageProps) {
+export default function RoomPage() {
   const params = useParams();
-
-  const city = useAppSelector(getCity);
-  const offers = useAppSelector(getOffers);
-  const filteredOffers = groupOffers(offers)[city.name];
+  const dispatch = useAppDispatch();
 
   const navigate = useNavigate();
   const idFromParams = Number(params.id);
-  const offer = filteredOffers.find((offerItem) => offerItem.id === idFromParams);
 
-  if (!offer) {
+  const offer = useAppSelector(getOffer);
+  const offerStatus = useAppSelector(getOfferLoadStatus);
+  const offers = useAppSelector(getOffersNearBy);
+  const offersStatus = useAppSelector(getOffersNearLoadStatus);
+  const reviews = useAppSelector(getComments);
+  const reviewsStatus = useAppSelector(getCommentsLoadStatus);
+
+
+  if (offerStatus.isError) {
     navigate(AppRoute.NotFound);
   }
+
+  useEffect(() => {
+    dispatch(fetchOfferAction(idFromParams));
+    dispatch(fetchCommentsAction(idFromParams));
+    dispatch(fetchOffersNearAction(idFromParams));
+  }, [dispatch, idFromParams]);
+
+  useEffect(() => {
+    window.scrollTo(ScrollParameters);
+  }, [idFromParams]);
 
   const [activeOfferId, setActiveOfferId] = useState(NO_CARD_ID);
 
@@ -91,7 +105,7 @@ export default function RoomPage({reviews}: RoomPageProps) {
             <Map
               className='property__map'
               city={offer.city}
-              offers={filteredOffers}
+              offers={offers}
               selectedOfferId={activeOfferId}
               isWide
             />
@@ -101,7 +115,7 @@ export default function RoomPage({reviews}: RoomPageProps) {
               <h2 className="near-places__title">Other places in the neighbourhood</h2>
               <div className="near-places__list places__list">
                 <PlaceCardList
-                  offers={filteredOffers.slice(0, OFFERS_LIST_LIMIT)}
+                  offers={offers.slice(0, OFFERS_LIST_LIMIT)}
                   type='nearPlaces'
                   classNamePrefix='near-places'
                   onListItemActive={setActiveOfferId}

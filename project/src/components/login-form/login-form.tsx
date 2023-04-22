@@ -32,9 +32,12 @@ export default function LoginForm() {
   const authStatus = useAppSelector(getAuthorizationStatus);
   const authloadStatus = useAppSelector(getAuthorizationLoadStatus);
 
-  if (authStatus === AuthorizationStatus.Auth) {
-    navigate(AppRoute.Root);
-  }
+  useEffect(() => {
+    if (authStatus === AuthorizationStatus.Auth) {
+      navigate(AppRoute.Root);
+    }
+  }, [authStatus]);
+
 
   useEffect(() => {
     dispatch(resetAuthLoadStatus)

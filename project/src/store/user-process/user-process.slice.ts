@@ -38,6 +38,7 @@ export const userProcess = createSlice({
         state.authorizationStatus = AuthorizationStatus.NoAuth;
         state.authorizationLoadStatus = FetchStatus.Failed;
       })
+
       .addCase(loginAction.pending, (state) => {
         state.authorizationLoadStatus = FetchStatus.Loading;
       })
@@ -53,6 +54,7 @@ export const userProcess = createSlice({
       .addCase(logoutAction.pending, (state) => {
         state.authorizationLoadStatus = FetchStatus.Loading;
       })
+
       .addCase(logoutAction.fulfilled, (state, action) => {
         state.authorizationStatus = AuthorizationStatus.NoAuth;
         state.authorizationLoadStatus = FetchStatus.Success;
