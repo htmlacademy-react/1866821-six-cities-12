@@ -7,7 +7,7 @@ type SignProps = {
   isAuthorized: boolean;
 }
 
-export default function Sign({isAuthorized}: SignProps) {
+export default function LogInLogOut({isAuthorized}: SignProps) {
   const signClassName = isAuthorized ? 'header__signout' : 'header__login';
   const signText = isAuthorized ? 'Sign out' : 'Sign in';
   const dispatch = useAppDispatch();

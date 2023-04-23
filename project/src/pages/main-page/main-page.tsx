@@ -11,35 +11,24 @@ import { groupOffers, sortOffers } from '../../utils/offers';
 import { bringFirstCharToUpperCase } from '../../utils/common';
 import NoPlaces from '../../components/no-places/no-places';
 import Spinner from '../../components/spinners/spinner/spinner';
-import { getCity, getSort } from '../../store/aside-process/aside-process.selectors';
+import { getCity, getSort } from '../../store/app-aside-process/app-aside-process.selectors';
 import { getOffers, getOffersLoadStatus } from '../../store/offers-process/offers-process.selectors';
-import { checkAuthAction, fetchOffersAction } from '../../store/api-actions';
-import ErrorFullScreen from '../../components/error-fullscreen/error-fullscreen';
-
+import { fetchOffersAction } from '../../store/api-actions';
 
 export default function MainPage() {
   const [activeOfferId, setActiveOfferId] = useState(NO_CARD_ID);
 
-  const offersLoadStatus = useAppSelector(getOffersLoadStatus);
   const city = useAppSelector(getCity);
   const sort = useAppSelector(getSort);
   const offers = useAppSelector(getOffers);
+  const offersLoadStatus = useAppSelector(getOffersLoadStatus);
   const filteredOffers = groupOffers(offers)[city.name];
   const sortedOffers = sortOffers(sort, filteredOffers ?? []);
-  const mainEmptyClassName = !filteredOffers ? 'page__main--index-empty' : '';
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(fetchOffersAction());
-    dispatch(checkAuthAction());
   }, [dispatch]);
-
-
-  if(offersLoadStatus.isError) {
-    return (
-      <ErrorFullScreen />
-    );
-  }
 
   return (
     <LayoutBase
@@ -47,7 +36,7 @@ export default function MainPage() {
       pageTitle='6 cities'
       className='page--gray page--main'
     >
-      <main className={cn('page__main', 'page__main--index', mainEmptyClassName)}>
+      <main className={cn('page__main', 'page__main--index', {'page__main--index-empty' : !filteredOffers})}>
         <h1 className="visually-hidden">Cities</h1>
         <CitiesList activeCity={city}/>
 

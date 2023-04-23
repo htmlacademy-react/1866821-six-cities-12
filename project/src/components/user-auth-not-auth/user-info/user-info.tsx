@@ -1,11 +1,11 @@
-import Avatar from '../../../components/avatar/avatar';
+import Avatar from '../../avatar/avatar';
 import { UserData } from '../../../types/user-data';
 
 export type LogInfoProps = {
   userData: UserData | null;
 }
 
-export default function LogInfo({userData = null}: LogInfoProps) {
+export default function UserInfo({userData = null}: LogInfoProps) {
 
   return (
     <li className="header__nav-item user">

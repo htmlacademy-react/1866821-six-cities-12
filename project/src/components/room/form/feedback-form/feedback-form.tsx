@@ -6,15 +6,12 @@ import { addCommentAction } from '../../../../store/api-actions';
 import styles from './feedback-form.module.css';
 import cn from 'classnames';
 import { getCommentAddLoadStatus } from '../../../../store/commets-process/commets-process.selectors';
+import { useParams } from 'react-router-dom';
 
 const COMMNET_MIN_LENGTH = 50;
-
-type FeedbackFormProps = {
-  hotelId: number;
-}
+const COMMNET_MAX_LENGTH = 300;
 
 type Field = {
-  hotelId: number;
   comment: string;
   rating: number;
   error: boolean;
@@ -22,12 +19,13 @@ type Field = {
   touched: boolean;
 }
 
-export default function FeedbackForm({hotelId}: FeedbackFormProps) {
+export default function FeedbackForm() {
   const dispatch = useAppDispatch();
-  const commentsAddloadStatus = useAppSelector(getCommentAddLoadStatus);
+  const params = useParams();
+  const commentsAddLoadStatus = useAppSelector(getCommentAddLoadStatus);
+  const hotelId = Number(params.id);
 
   const [formData, setFromData] = useState<Field>({
-    hotelId,
     comment: '',
     rating: 1,
     error: true,
@@ -45,11 +43,10 @@ export default function FeedbackForm({hotelId}: FeedbackFormProps) {
 
   const fieldChangeHandle: ChangeEventHandlerCommon = (evt) => {
     const {name, value} = evt.target;
-    const isError = (formData.comment.length < COMMNET_MIN_LENGTH);
+    const isError = (formData.comment.length < COMMNET_MIN_LENGTH && formData.comment.length > COMMNET_MAX_LENGTH);
 
     setFromData({
       ...formData,
-      hotelId,
       [name]: value,
       error: isError,
     });
@@ -62,10 +59,13 @@ export default function FeedbackForm({hotelId}: FeedbackFormProps) {
       return;
     }
 
-    dispatch(addCommentAction(formData));
+    dispatch(addCommentAction({
+      hotelId,
+      comment: formData.comment,
+      rating: formData.rating
+    }));
     setFromData({
       ...formData,
-      hotelId,
       comment: '',
       rating: 0
     });
@@ -85,7 +85,7 @@ export default function FeedbackForm({hotelId}: FeedbackFormProps) {
         id="review"
         name="comment"
         placeholder="Tell how was your stay, what you like and what can be improved"
-        disabled={commentsAddloadStatus.isLoading}
+        disabled={commentsAddLoadStatus.isLoading}
       >
       </textarea>
       <div className="reviews__button-wrapper">
@@ -98,12 +98,12 @@ export default function FeedbackForm({hotelId}: FeedbackFormProps) {
         <button
           className="reviews__submit form__submit button"
           type="submit"
-          disabled={(commentsAddloadStatus.isLoading || formData.error) || commentsAddloadStatus.isError}
+          disabled={commentsAddLoadStatus.isLoading || formData.error}
         >
           Submit
         </button>
       </div>
-      {commentsAddloadStatus.isError && <span>Ошибка, попробуйте позже, отзыв не добавлен</span>}
+      {commentsAddLoadStatus.isError && <span>Ошибка, попробуйте позже, отзыв не добавлен</span>}
     </form>
   );
 }

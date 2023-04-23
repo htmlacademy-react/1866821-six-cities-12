@@ -3,21 +3,18 @@ import { Cities, NameSpace, SortKinds } from '../../const';
 import { SortType } from '../../types/sort';
 import { City } from 'types/city';
 
-
 type Aside = {
   city: City;
   sort: string;
-  hotelId: number | null;
 }
 
 const initialState: Aside = {
   city: Cities.Paris,
-  sort: SortKinds.POPULAR,
-  hotelId: null,
+  sort: SortKinds.POPULAR
 };
 
 export const asideProcess = createSlice({
-  name: NameSpace.Aside,
+  name: NameSpace.AppAside,
   initialState,
   reducers: {
     changeSort: (state, action: PayloadAction<keyof SortType>) => {
@@ -25,11 +22,8 @@ export const asideProcess = createSlice({
     },
     changeCity: (state, action: PayloadAction<City>) => {
       state.city = action.payload;
-    },
-    changeHotelId: (state, action: PayloadAction<number>) => {
-      state.hotelId = action.payload;
     }
   }
 });
 
-export const { changeSort, changeCity, changeHotelId } = asideProcess.actions;
+export const { changeSort, changeCity } = asideProcess.actions;

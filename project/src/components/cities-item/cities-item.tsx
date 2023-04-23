@@ -1,7 +1,7 @@
 import cn from 'classnames';
 import { City } from '../../types/city';
 import {useAppDispatch} from '../../hooks/base';
-import { changeCity } from '../../store/aside-process/aside-process.slice';
+import { changeCity } from '../../store/app-aside-process/app-aside-process.slice';
 
 type CitiesItemProps = {
   city: City;

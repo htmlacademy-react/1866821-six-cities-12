@@ -2,7 +2,7 @@ import cn from 'classnames';
 import { useAppDispatch } from '../../../hooks/base';
 import { SortType } from '../../../types/sort';
 import { SortKinds } from '../../../const';
-import { changeSort } from '../../../store/aside-process/aside-process.slice';
+import { changeSort } from '../../../store/app-aside-process/app-aside-process.slice';
 
 type SortOptionsItemProps = {
   sortType: keyof SortType;

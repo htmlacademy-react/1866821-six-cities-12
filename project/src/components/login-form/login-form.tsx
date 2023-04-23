@@ -1,12 +1,8 @@
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../hooks/base';
+import { ChangeEvent, FormEvent, useState } from 'react';
+import { useAppDispatch } from '../../hooks/base';
 import styles from './login-form.module.css';
 import cn from 'classnames';
 import { loginAction } from '../../store/api-actions';
-import { AppRoute } from '../../const';
-import { useNavigate } from 'react-router-dom';
-import { getAuthorizationLoadStatus, getAuthorizationStatus } from '../../store/user-process/user-process.selectors';
-import { resetAuthLoadStatus } from '../../store/user-process/user-process.slice';
 
 const LoginFields: Record<string, string> = {
   email: 'E-mail',
@@ -15,7 +11,6 @@ const LoginFields: Record<string, string> = {
 
 const emailRegexPattern = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
 const passwordRegexPattern = /^\S*$/;
-const serverErrorText = 'Ошибка, попробуйте позже';
 
 type Field = {
   value: string;
@@ -27,21 +22,6 @@ type Field = {
 
 export default function LoginForm() {
   const dispatch = useAppDispatch();
-  const [touched, setTouched] = useState(false);
-  const navigate = useNavigate();
-  const authStatus = useAppSelector(getAuthorizationStatus);
-  const authloadStatus = useAppSelector(getAuthorizationLoadStatus);
-
-  useEffect(() => {
-    if (authStatus.auth && !authloadStatus.isLoading) {
-      navigate(AppRoute.Root);
-    }
-  }, [authStatus]);
-
-
-  useEffect(() => {
-    dispatch(resetAuthLoadStatus);
-  }, []);
 
   const [formData, setFormData] = useState<Record<string, Field>>({
     email: {
@@ -63,7 +43,6 @@ export default function LoginForm() {
   const handleInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
     const {name, value} = evt.target;
     const isError = !formData[name].regex.test(value);
-    setTouched(true);
     setFormData({
       ...formData,
       [name]: {
@@ -78,7 +57,6 @@ export default function LoginForm() {
 
   const handleFormSubmit = (evt: FormEvent) => {
     evt.preventDefault();
-    setTouched(true);
     let hasEmtyFields = false;
     let hasErrors = false;
     const newFormData = {...formData};
@@ -132,10 +110,6 @@ export default function LoginForm() {
       >
         Sign in
       </button>
-      {(touched && authloadStatus.isError) &&
-        <span className={cn(styles.errorBlock, styles.btnErrorBlock)}>
-          {serverErrorText}
-        </span>}
     </form>
   );
 }
