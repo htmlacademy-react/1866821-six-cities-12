@@ -7,7 +7,6 @@ import FavoritesPage from '../../pages/favorites-page/favorites-page';
 import NotFoundPage from '../../pages/not-found-page/not-found-page';
 import RoomPage from '../../pages/room-page/room-page';
 import PrivateRoute from '../private-route/private-route';
-import { Offers } from '../../types/offer';
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks/base';
 import { checkAuthAction } from '../../store/api-actions';
@@ -17,11 +16,7 @@ import HistoryRouter from '../../components/history-route/history-route';
 import { getAuthorizationStatus } from '../../store/user-process/user-process.selectors';
 import Spinner from '../../components/spinners/spinner/spinner';
 
-type AppProps = {
-  favoriteOffers: Offers;
-}
-
-function App({favoriteOffers}: AppProps) {
+function App() {
   const dispatch = useAppDispatch();
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
 
@@ -55,7 +50,7 @@ function App({favoriteOffers}: AppProps) {
             path={AppRoute.Favorites}
             element={
               <PrivateRoute isAuthorised={authorizationStatus.auth}>
-                <FavoritesPage offers={favoriteOffers}/>
+                <FavoritesPage />
               </PrivateRoute>
             }
           />
@@ -65,7 +60,7 @@ function App({favoriteOffers}: AppProps) {
           />
           <Route
             path={AppRoute.Error}
-            element={<ErrorFullScreen/>}
+            element={<ErrorFullScreen />}
           />
         </Routes>
       </HistoryRouter>

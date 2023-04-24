@@ -18,7 +18,11 @@ const initialState: CommentsProcess = {
 export const commentsProcess = createSlice({
   name: NameSpace.Comments,
   initialState,
-  reducers: {},
+  reducers: {
+    resetCommentsLoadStatus: (state) => {
+      state.commentsLoadStatus = FetchStatus.Idle;
+    },
+  },
   extraReducers(builder) {
     builder
       .addCase(addCommentAction.pending, (state) => {
@@ -44,3 +48,5 @@ export const commentsProcess = createSlice({
       });
   }
 });
+
+export const { resetCommentsLoadStatus } = commentsProcess.actions;

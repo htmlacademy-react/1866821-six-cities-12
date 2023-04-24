@@ -1,19 +1,23 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { EmptyOffer, FetchStatus, NameSpace } from '../../const';
-import { fetchOneOfferAction, fetchOffersAction, fetchOffersNearByAction } from '../api-actions';
+import { FetchStatus, NameSpace } from '../../const';
+import { fetchOneOfferAction,
+  fetchOffersAction,
+  fetchOffersNearByAction,
+  fetchFavoriteOffersAction
+} from '../api-actions';
 import { Offer, Offers } from 'types/offer';
 
 export type OffersProcess = {
   offersList: Offers;
   offersLoadStatus: FetchStatus;
-  offer: Offer;
+  offer: Offer | null;
   offerLoadStatus: FetchStatus;
 }
 
 const initialState: OffersProcess = {
   offersList: [],
   offersLoadStatus: FetchStatus.Idle,
-  offer: EmptyOffer,
+  offer: null,
   offerLoadStatus: FetchStatus.Idle,
 };
 
@@ -54,6 +58,18 @@ export const offersProcess = createSlice({
         state.offersLoadStatus = FetchStatus.Success;
       })
       .addCase(fetchOffersNearByAction.rejected, (state) => {
+        state.offersList = [];
+        state.offersLoadStatus = FetchStatus.Failed;
+      })
+
+      .addCase(fetchFavoriteOffersAction.pending, (state) => {
+        state.offersLoadStatus = FetchStatus.Loading;
+      })
+      .addCase(fetchFavoriteOffersAction.fulfilled, (state, action) => {
+        state.offersList = action.payload;
+        state.offersLoadStatus = FetchStatus.Success;
+      })
+      .addCase(fetchFavoriteOffersAction.rejected, (state) => {
         state.offersList = [];
         state.offersLoadStatus = FetchStatus.Failed;
       });

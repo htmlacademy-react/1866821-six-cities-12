@@ -16,8 +16,7 @@ import { getOneOffer, getOneOfferLoadStatus, getOffers, getOffersLoadStatus } fr
 import { getComments, getCommentsLoadStatus } from '../../store/commets-process/commets-process.selectors';
 import { getAuthorizationStatus } from '../../store/user-process/user-process.selectors';
 import Spinner from '../../components/spinners/spinner/spinner';
-import { Offers } from 'types/offer';
-
+import ErrorFullScreen from '../../components/error-fullscreen/error-fullscreen';
 
 const OFFERS_LIST_LIMIT = 3;
 
@@ -31,7 +30,6 @@ export default function RoomPage() {
   const offerLoadStatus = useAppSelector(getOneOfferLoadStatus);
 
   const offersNearBy = useAppSelector(getOffers);
-  const offersNearByWithCenterOffer: Offers = [...offersNearBy, offer];
   const offersNearByLoadStatus = useAppSelector(getOffersLoadStatus);
 
   const reviews = useAppSelector(getComments);
@@ -45,7 +43,12 @@ export default function RoomPage() {
     dispatch(fetchOffersNearByAction({offerId: hotelId}));
   }, [dispatch, hotelId]);
 
-  if (offerLoadStatus.isLoading) {
+
+  if (offerLoadStatus.isError) {
+    return <ErrorFullScreen />;
+  }
+
+  if (offerLoadStatus.isLoading || !offer) {
     return <Spinner fullHeight />;
   }
 
@@ -98,13 +101,13 @@ export default function RoomPage() {
           <Map
             className='property__map'
             city={offer.city}
-            offers={offersNearByWithCenterOffer}
+            offers={[...offersNearBy, offer]}
             selectedOfferId={offer.id}
             isWide
           />
         </section>
         <div className="container">
-          {offersNearByLoadStatus.isError && <Spinner />}
+          {offersNearByLoadStatus.isLoading && <Spinner />}
           {offersNearByLoadStatus.isSuccess &&
           <section className="near-places places">
             <h2 className="near-places__title">Other places in the neighbourhood</h2>

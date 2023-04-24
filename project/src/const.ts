@@ -1,14 +1,15 @@
 import { CitiesMap } from 'types/city';
-import { Offer } from 'types/offer';
 import { SortType } from 'types/sort';
 
 export const REDIRECT_ACTION_NAME = 'app/redirectToRoute';
 
 export enum ServerErrors {
-  AuthError = 'Authorization internal error, try again later',
-  LoginError = 'Login internal error, try again later',
-  LogoutError = 'Logout internal error, try again later',
-  GetOffersError = 'Get offers internal error, try again later'
+  Auth = 'Authorization internal error, try again later',
+  Login = 'Login internal error, try again later',
+  Logout = 'Logout internal error, try again later',
+  GetOffers = 'Get offers internal error, try again later',
+  Comment = 'Comment add internal error, try again later',
+  Unauthorized = 'No unauthorized'
 }
 
 
@@ -16,7 +17,7 @@ export enum FetchStatus {
   Idle = 'Idle',
   Loading = 'Loading',
   Success = 'Success',
-  Failed = 'Faild'
+  Failed = 'Failed'
 }
 
 export enum NameSpace {
@@ -115,41 +116,6 @@ export const Cities: CitiesMap = {
       zoom: 13
     }
   },
-};
-
-export const EmptyOffer: Offer = {
-  id: -1,
-  location: {
-    latitude: 0,
-    longitude: 0,
-    zoom: 13
-  },
-  description: '',
-  host: {
-    avatarUrl: '',
-    id: -1,
-    isPro: false,
-    name: ''
-  },
-  goods: [],
-  price: -1,
-  maxAdults: -1,
-  bedrooms: -1,
-  type: 'apartment',
-  rating: 0,
-  isFavorite: false,
-  isPremium: false,
-  title: '',
-  images: [],
-  previewImage: '',
-  city: {
-    location: {
-      latitude: 0,
-      longitude: 0,
-      zoom: 10
-    },
-    name: ''
-  }
 };
 
 export const SortKinds: SortType = {

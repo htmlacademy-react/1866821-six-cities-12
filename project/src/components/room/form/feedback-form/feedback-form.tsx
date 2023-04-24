@@ -1,49 +1,53 @@
-import { FormEventHandler, useState } from 'react';
+import { FormEventHandler, useEffect, useState } from 'react';
 import { ChangeEventHandlerCommon } from '../../../../types/handlers';
 import FeedbackRating from '../feedback-rating/feedback-rating';
 import { useAppDispatch, useAppSelector } from '../../../../hooks/base';
 import { addCommentAction } from '../../../../store/api-actions';
-import styles from './feedback-form.module.css';
 import cn from 'classnames';
 import { getCommentAddLoadStatus } from '../../../../store/commets-process/commets-process.selectors';
 import { useParams } from 'react-router-dom';
+import { resetCommentsLoadStatus } from '../../../../store/commets-process/commets-process.slice';
 
 const COMMNET_MIN_LENGTH = 50;
 const COMMNET_MAX_LENGTH = 300;
+const MIN_RATING = 0;
+const RATING_FIELD_NAME = 'rating';
+const COMMENT_FIELD_NAME = 'comment';
 
 type Field = {
   comment: string;
   rating: number;
   error: boolean;
-  errorMessage: string;
-  touched: boolean;
 }
 
 export default function FeedbackForm() {
   const dispatch = useAppDispatch();
   const params = useParams();
-  const commentsAddLoadStatus = useAppSelector(getCommentAddLoadStatus);
+  const commentAddLoadStatus = useAppSelector(getCommentAddLoadStatus);
   const hotelId = Number(params.id);
 
   const [formData, setFromData] = useState<Field>({
     comment: '',
-    rating: 1,
+    rating: 0,
     error: true,
-    errorMessage: 'Minimum 50 characters',
-    touched: false
   });
 
 
-  const fieldFocusHandler = () => {
-    setFromData({
-      ...formData,
-      touched: true
-    });
-  };
-
   const fieldChangeHandle: ChangeEventHandlerCommon = (evt) => {
     const {name, value} = evt.target;
-    const isError = (formData.comment.length < COMMNET_MIN_LENGTH && formData.comment.length > COMMNET_MAX_LENGTH);
+
+    let isRatingError = formData.rating === MIN_RATING;
+    let isMessageError = formData.comment.length < COMMNET_MIN_LENGTH || formData.comment.length > COMMNET_MAX_LENGTH;
+
+    if (name === RATING_FIELD_NAME) {
+      isRatingError = Number(value) === MIN_RATING;
+    }
+
+    if (name === COMMENT_FIELD_NAME) {
+      isMessageError = value.length < COMMNET_MIN_LENGTH || value.length > COMMNET_MAX_LENGTH;
+    }
+
+    const isError = (isMessageError || isRatingError);
 
     setFromData({
       ...formData,
@@ -51,6 +55,17 @@ export default function FeedbackForm() {
       error: isError,
     });
   };
+
+  useEffect(() => {
+    if (commentAddLoadStatus.isSuccess) {
+      setFromData({
+        comment: '',
+        rating: 0,
+        error: true
+      });
+      dispatch(resetCommentsLoadStatus);
+    }
+  }, [commentAddLoadStatus]);
 
   const submitFormHandle: FormEventHandler<HTMLFormElement> = (evt) => {
     evt.preventDefault();
@@ -64,28 +79,21 @@ export default function FeedbackForm() {
       comment: formData.comment,
       rating: formData.rating
     }));
-    setFromData({
-      ...formData,
-      comment: '',
-      rating: 0
-    });
-  };
 
-  const commentErrorClassName = (formData.error && formData.touched) ? styles.error : '';
+  };
 
   return (
     <form onSubmit={submitFormHandle} className="reviews__form form" action="#" method="post">
       <label className="reviews__label form__label" htmlFor="review">Your review</label>
       <FeedbackRating onRatingChange={fieldChangeHandle} checkedRating={formData.rating}/>
       <textarea
-        onFocus={fieldFocusHandler}
         onChange={fieldChangeHandle}
         value={formData.comment}
-        className={cn('reviews__textarea', 'form__textarea', commentErrorClassName)}
+        className={cn('reviews__textarea', 'form__textarea')}
         id="review"
-        name="comment"
+        name={COMMENT_FIELD_NAME}
         placeholder="Tell how was your stay, what you like and what can be improved"
-        disabled={commentsAddLoadStatus.isLoading}
+        disabled={commentAddLoadStatus.isLoading}
       >
       </textarea>
       <div className="reviews__button-wrapper">
@@ -98,12 +106,11 @@ export default function FeedbackForm() {
         <button
           className="reviews__submit form__submit button"
           type="submit"
-          disabled={commentsAddLoadStatus.isLoading || formData.error}
+          disabled={commentAddLoadStatus.isLoading || formData.error}
         >
           Submit
         </button>
       </div>
-      {commentsAddLoadStatus.isError && <span>Ошибка, попробуйте позже, отзыв не добавлен</span>}
     </form>
   );
 }

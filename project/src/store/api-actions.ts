@@ -20,8 +20,15 @@ export const addCommentAction = createAsyncThunk<Reviews, ReviewData, {
 }>(
   'comments/addComment',
   async ({hotelId, comment, rating}, {dispatch, extra: api}) => {
-    const {data} = await api.post<Reviews>(`${APIRoute.Comments}/${hotelId}`, {comment, rating});
-    return data;
+    try {
+      const {data} = await api.post<Reviews>(`${APIRoute.Comments}/${hotelId}`, {comment, rating});
+      return data;
+    } catch (err) {
+      if (err instanceof AxiosError && err.response?.status === StatusCodes.NOT_FOUND) {
+        toast.warn(ServerErrors.Comment);
+      }
+      throw new Error();
+    }
   },
 );
 
@@ -51,7 +58,7 @@ export const fetchOneOfferAction = createAsyncThunk<Offer, number, {
       if (err instanceof AxiosError && err.response?.status === StatusCodes.NOT_FOUND) {
         dispatch(redirectToRoute(AppRoute.NotFound));
       }
-      throw new Error(ServerErrors.GetOffersError);
+      throw new Error();
     }
   },
 );
@@ -70,7 +77,7 @@ export const fetchOffersAction = createAsyncThunk<Offers, undefined, {
       if (err instanceof AxiosError && err.response?.status === StatusCodes.NOT_FOUND) {
         dispatch(redirectToRoute(AppRoute.Error));
       }
-      throw new Error(ServerErrors.GetOffersError);
+      throw new Error();
     }
   },
 );
@@ -84,6 +91,25 @@ export const fetchOffersNearByAction = createAsyncThunk<Offers, OffersData, {
   async (dataOffers, {dispatch, extra: api}) => {
     const {data} = await api.get<Offers>(`${APIRoute.Offers}/${dataOffers.offerId}${APIRoute.OffersNearby}`);
     return data;
+  },
+);
+
+export const fetchFavoriteOffersAction = createAsyncThunk<Offers, undefined, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance;
+}>(
+  'offers/fetchFavoriteOffers',
+  async (_arg, {dispatch, extra: api}) => {
+    try {
+      const {data} = await api.get<Offers>(`${APIRoute.Favorites}`);
+      return data;
+    } catch (err) {
+      if (err instanceof AxiosError && err.response?.status === StatusCodes.UNAUTHORIZED) {
+        toast.warn(ServerErrors.Unauthorized);
+      }
+      throw new Error();
+    }
   },
 );
 
@@ -101,9 +127,9 @@ export const loginAction = createAsyncThunk<UserData | null, AuthData, {
       return data;
     } catch (err) {
       if (err instanceof AxiosError && err.response?.status === StatusCodes.NOT_FOUND) {
-        toast.warn(ServerErrors.LoginError);
+        toast.warn(ServerErrors.Login);
       }
-      throw new Error(ServerErrors.LoginError);
+      throw new Error();
     }
   },
 );
@@ -120,7 +146,7 @@ export const logoutAction = createAsyncThunk<void, undefined, {
       dropToken();
     } catch (err) {
       if (err instanceof AxiosError && err.response?.status === StatusCodes.NOT_FOUND) {
-        toast.warn(ServerErrors.LogoutError);
+        toast.warn(ServerErrors.Logout);
       }
     }
   },
@@ -138,9 +164,9 @@ export const checkAuthAction = createAsyncThunk<UserData | null, undefined, {
       return data;
     } catch (err) {
       if (err instanceof AxiosError && err.response?.status === StatusCodes.NOT_FOUND) {
-        toast.warn(ServerErrors.AuthError);
+        toast.warn(ServerErrors.Auth);
       }
-      throw new Error(ServerErrors.AuthError);
+      throw new Error();
     }
   },
 );
