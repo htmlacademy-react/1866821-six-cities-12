@@ -3,6 +3,7 @@ import FeedbackRatingItem from './feedback-rating-item/feedback-rating-item';
 
 type FeedbackRatingProps = {
   onRatingChange: ChangeEventHandlerCommon;
+  checkedRating: number;
 }
 
 type RatingTitles = {
@@ -17,12 +18,17 @@ const titles: RatingTitles = {
   5: 'perfect'
 };
 
-export default function FeedbackRating({onRatingChange}: FeedbackRatingProps) {
-
+export default function FeedbackRating({onRatingChange, checkedRating}: FeedbackRatingProps) {
   return (
     <div className="reviews__rating-form form__rating">
-      {Object.keys(titles).map((titleIndex) => (
-        <FeedbackRatingItem key={titleIndex} onRatingItemChange={onRatingChange} ratingNumber={titleIndex} title={titles[Number(titleIndex)]}/>
+      {Object.keys(titles).reverse().map((titleIndex) => (
+        <FeedbackRatingItem
+          key={titleIndex}
+          onRatingItemChange={onRatingChange}
+          ratingNumber={Number(titleIndex)}
+          title={titles[Number(titleIndex)]}
+          checked={Number(titleIndex) === Number(checkedRating)}
+        />
       ))}
     </div>
   );

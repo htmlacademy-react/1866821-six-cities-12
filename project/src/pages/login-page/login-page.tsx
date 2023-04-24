@@ -1,8 +1,23 @@
 import Logo from '../../components/logo/logo';
 import LoginForm from '../../components/login-form/login-form';
 import LayoutBase from '../../layouts/layout-base/layout-base';
+import { useEffect } from 'react';
+import { useAppSelector } from '../../hooks/base';
+import { getAuthorizationStatus } from '../../store/user-process/user-process.selectors';
+import { useNavigate } from 'react-router-dom';
+import { AppRoute } from '../../const';
 
 export default function LoginPage() {
+  const navigate = useNavigate();
+  const authStatus = useAppSelector(getAuthorizationStatus);
+
+  useEffect(() => {
+    if (authStatus.auth) {
+      navigate(AppRoute.Root);
+    }
+  }, [authStatus]);
+
+
   return (
     <LayoutBase pageTitle="login" className="page--gray page--login">
       <>

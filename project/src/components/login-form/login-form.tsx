@@ -1,11 +1,8 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../hooks/base';
+import { useAppDispatch } from '../../hooks/base';
 import styles from './login-form.module.css';
 import cn from 'classnames';
 import { loginAction } from '../../store/api-actions';
-import { StatusCodes } from 'http-status-codes';
-import { AppRoute, AuthorizationStatus } from '../../const';
-import { useNavigate } from 'react-router-dom';
 
 const LoginFields: Record<string, string> = {
   email: 'E-mail',
@@ -14,7 +11,6 @@ const LoginFields: Record<string, string> = {
 
 const emailRegexPattern = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
 const passwordRegexPattern = /^\S*$/;
-const serverErrorText = 'Ошибка, попробуйте позже';
 
 type Field = {
   value: string;
@@ -26,13 +22,6 @@ type Field = {
 
 export default function LoginForm() {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-  const serverError = useAppSelector((state) => state.error);
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
-
-  if (authorizationStatus === AuthorizationStatus.Auth) {
-    navigate(AppRoute.Root);
-  }
 
   const [formData, setFormData] = useState<Record<string, Field>>({
     email: {
@@ -48,13 +37,12 @@ export default function LoginForm() {
       touched: false,
       regex: passwordRegexPattern,
       errorMessage: 'password error'
-    },
+    }
   });
 
   const handleInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
     const {name, value} = evt.target;
     const isError = !formData[name].regex.test(value);
-
     setFormData({
       ...formData,
       [name]: {
@@ -69,7 +57,6 @@ export default function LoginForm() {
 
   const handleFormSubmit = (evt: FormEvent) => {
     evt.preventDefault();
-
     let hasEmtyFields = false;
     let hasErrors = false;
     const newFormData = {...formData};
@@ -88,7 +75,6 @@ export default function LoginForm() {
       setFormData({...newFormData});
       return;
     }
-
 
     dispatch(loginAction({
       login: formData.email.value,
@@ -118,12 +104,12 @@ export default function LoginForm() {
           </div>);}
       )}
 
-      <button className="login__submit form__submit button" type="submit">Sign in</button>
-      {serverError && serverError.code !== StatusCodes.UNAUTHORIZED && (
-        <span className={cn(styles.errorBlock, styles.btnErrorBlock)}>
-          {serverErrorText}
-        </span>
-      )}
+      <button
+        className="login__submit form__submit button"
+        type="submit"
+      >
+        Sign in
+      </button>
     </form>
   );
 }

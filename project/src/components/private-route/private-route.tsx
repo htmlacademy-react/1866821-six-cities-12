@@ -1,15 +1,14 @@
 import {Navigate} from 'react-router-dom';
-import {AppRoute, AuthorizationStatus} from '../../const';
+import {AppRoute} from '../../const';
 
 type PrivateRouteProps = {
-  authorizationStatus: AuthorizationStatus;
   children: JSX.Element;
+  isAuthorised: boolean;
 }
 
-function PrivateRoute({authorizationStatus, children}: PrivateRouteProps) {
-
+function PrivateRoute({children, isAuthorised}: PrivateRouteProps) {
   return (
-    authorizationStatus === AuthorizationStatus.Auth
+    isAuthorised
       ? children
       : <Navigate to={AppRoute.Login} />
   );

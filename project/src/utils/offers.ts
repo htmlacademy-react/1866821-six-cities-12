@@ -8,9 +8,7 @@ export const groupOffers = (offers: Offers): OffersByCity => offers.reduce(
     }
     offersByCity[offer.city.name].push(offer);
     return offersByCity;
-  }
-  ,
-  {}
+  },{}
 );
 
 export const sortOffers = (sortKind: string, offers: Offers): Offers => {

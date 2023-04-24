@@ -1,6 +1,32 @@
 import { CitiesMap } from 'types/city';
 import { SortType } from 'types/sort';
 
+export const REDIRECT_ACTION_NAME = 'app/redirectToRoute';
+
+export enum ServerErrors {
+  Auth = 'Authorization internal error, try again later',
+  Login = 'Login internal error, try again later',
+  Logout = 'Logout internal error, try again later',
+  GetOffers = 'Get offers internal error, try again later',
+  Comment = 'Comment add internal error, try again later',
+  Unauthorized = 'No unauthorized'
+}
+
+
+export enum FetchStatus {
+  Idle = 'Idle',
+  Loading = 'Loading',
+  Success = 'Success',
+  Failed = 'Failed'
+}
+
+export enum NameSpace {
+  AppAside = 'APP_ASIDE',
+  Offers = 'OFFERS',
+  User = 'USER',
+  Comments = 'COMMENTS'
+}
+
 export enum AppRoute {
   Root = '/',
   Login = '/login',
@@ -8,6 +34,7 @@ export enum AppRoute {
   Room = '/offer/:id',
   DevRoom = '/offer-dev',
   NotFound = '*',
+  Error = '/error'
 }
 
 export enum AuthorizationStatus {

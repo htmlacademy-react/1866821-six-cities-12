@@ -2,7 +2,7 @@ import cn from 'classnames';
 import { useAppDispatch } from '../../../hooks/base';
 import { SortType } from '../../../types/sort';
 import { SortKinds } from '../../../const';
-import { changeSort } from '../../../store/actions';
+import { changeSort } from '../../../store/app-aside-process/app-aside-process.slice';
 
 type SortOptionsItemProps = {
   sortType: keyof SortType;
@@ -18,7 +18,7 @@ export default function SortOptionsItem({sortType, className, onOptionClick}: So
       tabIndex={0}
       onClick={() => {
         onOptionClick(false);
-        dispatch(changeSort({sortType}));
+        dispatch(changeSort(sortType));
       }}
     >
       {SortKinds[sortType]}

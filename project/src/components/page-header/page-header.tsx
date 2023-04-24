@@ -1,5 +1,5 @@
 import Logo from '../logo/logo';
-import LogSign from '../../components/log-sign/log-sign/log-sign';
+import UserAuthNotAuth from '../../components/user-auth-not-auth/user-auth-not-auth/user-auth-not-auth';
 
 export default function PageHeader() {
 
@@ -12,7 +12,7 @@ export default function PageHeader() {
           </div>
           <nav className="header__nav">
             <ul className="header__nav-list">
-              <LogSign />
+              <UserAuthNotAuth />
             </ul>
           </nav>
         </div>
