@@ -1,21 +1,23 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { FetchStatus, NameSpace } from '../../const';
+import { FavoritesChange, FetchStatus, NameSpace } from '../../const';
 import { fetchOneOfferAction,
   fetchOffersAction,
   fetchOffersNearByAction,
-  fetchFavoriteOffersAction
+  addFavoriteOfferAction,
+  removeFavoriteOfferAction
 } from '../api-actions';
 import { Offer, Offers } from 'types/offer';
+import { changeIsFavoriteFields, offerInOffers, removeOfferFromOffers } from '../../utils/offers';
 
 export type OffersProcess = {
-  offersList: Offers;
+  offers: Offers;
   offersLoadStatus: FetchStatus;
   offer: Offer | null;
   offerLoadStatus: FetchStatus;
 }
 
 const initialState: OffersProcess = {
-  offersList: [],
+  offers: [],
   offersLoadStatus: FetchStatus.Idle,
   offer: null,
   offerLoadStatus: FetchStatus.Idle,
@@ -42,11 +44,11 @@ export const offersProcess = createSlice({
         state.offersLoadStatus = FetchStatus.Loading;
       })
       .addCase(fetchOffersAction.fulfilled, (state, action) => {
-        state.offersList = action.payload;
+        state.offers = action.payload;
         state.offersLoadStatus = FetchStatus.Success;
       })
       .addCase(fetchOffersAction.rejected, (state) => {
-        state.offersList = [];
+        state.offers = [];
         state.offersLoadStatus = FetchStatus.Failed;
       })
 
@@ -54,24 +56,35 @@ export const offersProcess = createSlice({
         state.offersLoadStatus = FetchStatus.Loading;
       })
       .addCase(fetchOffersNearByAction.fulfilled, (state, action) => {
-        state.offersList = action.payload;
+        state.offers = action.payload;
         state.offersLoadStatus = FetchStatus.Success;
       })
       .addCase(fetchOffersNearByAction.rejected, (state) => {
-        state.offersList = [];
+        state.offers = [];
         state.offersLoadStatus = FetchStatus.Failed;
       })
 
-      .addCase(fetchFavoriteOffersAction.pending, (state) => {
-        state.offersLoadStatus = FetchStatus.Loading;
+
+      .addCase(addFavoriteOfferAction.fulfilled, (state, action) => {
+        if (action.payload.offer.isFavorite && !offerInOffers(action.payload.favoriteOffers, action.payload.offer)) {
+          const favoriteOffers = [...action.payload.favoriteOffers, action.payload.offer];
+          const changedOffers = changeIsFavoriteFields(action.payload.offers, favoriteOffers, FavoritesChange.Add);
+          state.offers = changedOffers;
+          if (state.offer && !offerInOffers(action.payload.offers, action.payload.offer)) {
+            state.offer.isFavorite = true;
+          }
+        }
       })
-      .addCase(fetchFavoriteOffersAction.fulfilled, (state, action) => {
-        state.offersList = action.payload;
-        state.offersLoadStatus = FetchStatus.Success;
-      })
-      .addCase(fetchFavoriteOffersAction.rejected, (state) => {
-        state.offersList = [];
-        state.offersLoadStatus = FetchStatus.Failed;
+
+
+      .addCase(removeFavoriteOfferAction.fulfilled, (state, action) => {
+        if (!action.payload.offer.isFavorite && offerInOffers(action.payload.favoriteOffers, action.payload.offer)) {
+          const favoriteOffers = removeOfferFromOffers(action.payload.favoriteOffers, action.payload.offer);
+          state.offers = changeIsFavoriteFields(action.payload.offers, favoriteOffers, FavoritesChange.Remove);
+          if (state.offer && !offerInOffers(action.payload.offers, action.payload.offer)) {
+            state.offer.isFavorite = false;
+          }
+        }
       });
   }
 });

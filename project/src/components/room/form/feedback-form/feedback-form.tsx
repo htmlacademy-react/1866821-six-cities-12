@@ -26,14 +26,14 @@ export default function FeedbackForm() {
   const commentAddLoadStatus = useAppSelector(getCommentAddLoadStatus);
   const hotelId = Number(params.id);
 
-  const [formData, setFromData] = useState<Field>({
+  const [formData, setFormData] = useState<Field>({
     comment: '',
     rating: 0,
     error: true,
   });
 
 
-  const fieldChangeHandle: ChangeEventHandlerCommon = (evt) => {
+  const handleChange: ChangeEventHandlerCommon = (evt) => {
     const {name, value} = evt.target;
 
     let isRatingError = formData.rating === MIN_RATING;
@@ -49,7 +49,7 @@ export default function FeedbackForm() {
 
     const isError = (isMessageError || isRatingError);
 
-    setFromData({
+    setFormData({
       ...formData,
       [name]: value,
       error: isError,
@@ -58,7 +58,7 @@ export default function FeedbackForm() {
 
   useEffect(() => {
     if (commentAddLoadStatus.isSuccess) {
-      setFromData({
+      setFormData({
         comment: '',
         rating: 0,
         error: true
@@ -67,7 +67,7 @@ export default function FeedbackForm() {
     }
   }, [commentAddLoadStatus]);
 
-  const submitFormHandle: FormEventHandler<HTMLFormElement> = (evt) => {
+  const handleSubmit: FormEventHandler<HTMLFormElement> = (evt) => {
     evt.preventDefault();
 
     if (formData.error) {
@@ -83,11 +83,11 @@ export default function FeedbackForm() {
   };
 
   return (
-    <form onSubmit={submitFormHandle} className="reviews__form form" action="#" method="post">
+    <form onSubmit={handleSubmit} className="reviews__form form" action="#" method="post">
       <label className="reviews__label form__label" htmlFor="review">Your review</label>
-      <FeedbackRating onRatingChange={fieldChangeHandle} checkedRating={formData.rating}/>
+      <FeedbackRating onRatingChange={handleChange} checkedRating={formData.rating}/>
       <textarea
-        onChange={fieldChangeHandle}
+        onChange={handleChange}
         value={formData.comment}
         className={cn('reviews__textarea', 'form__textarea')}
         id="review"

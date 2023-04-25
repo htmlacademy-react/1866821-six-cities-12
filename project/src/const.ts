@@ -1,6 +1,11 @@
 import { CitiesMap } from 'types/city';
 import { SortType } from 'types/sort';
 
+export enum FavoritesChange {
+  Remove = 0,
+  Add = 1
+}
+
 export const REDIRECT_ACTION_NAME = 'app/redirectToRoute';
 
 export enum ServerErrors {
@@ -9,9 +14,10 @@ export enum ServerErrors {
   Logout = 'Logout internal error, try again later',
   GetOffers = 'Get offers internal error, try again later',
   Comment = 'Comment add internal error, try again later',
-  Unauthorized = 'No unauthorized'
+  Unauthorized = 'No unauthorized',
+  FavoriteOfferAdd = 'Offer not added to favorites, internal error, try again later',
+  FavoriteOfferRemove = 'Offer not added to favorites, internal error, try again later'
 }
-
 
 export enum FetchStatus {
   Idle = 'Idle',
@@ -23,6 +29,7 @@ export enum FetchStatus {
 export enum NameSpace {
   AppAside = 'APP_ASIDE',
   Offers = 'OFFERS',
+  FavoriteOffers = 'FAVORITE_OFFERS',
   User = 'USER',
   Comments = 'COMMENTS'
 }

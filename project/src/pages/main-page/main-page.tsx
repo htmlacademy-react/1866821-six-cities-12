@@ -38,6 +38,7 @@ export default function MainPage() {
     >
       <main className={cn('page__main', 'page__main--index', {'page__main--index-empty' : !filteredOffers})}>
         <h1 className="visually-hidden">Cities</h1>
+
         <CitiesList activeCity={city}/>
 
         {offersLoadStatus.isLoading && <Spinner />}
@@ -58,7 +59,7 @@ export default function MainPage() {
                     <Sort currentSort={sort}/>
                     <div className="cities__places-list places__list tabs__content">
                       <PlaceCardList
-                        offers={sortedOffers}
+                        localOffers={sortedOffers}
                         onListItemActive={setActiveOfferId}
                         classNamePrefix='cities'
                         type='cities'

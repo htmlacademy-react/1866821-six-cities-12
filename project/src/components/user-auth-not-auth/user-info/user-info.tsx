@@ -3,9 +3,10 @@ import { UserData } from '../../../types/user-data';
 
 export type LogInfoProps = {
   userData: UserData | null;
+  favoritesNumber: number;
 }
 
-export default function UserInfo({userData = null}: LogInfoProps) {
+export default function UserInfo({userData = null, favoritesNumber}: LogInfoProps) {
 
   return (
     <li className="header__nav-item user">
@@ -16,7 +17,7 @@ export default function UserInfo({userData = null}: LogInfoProps) {
         {userData &&
           <>
             <span className="header__user-name user__name">{userData.email}</span>
-            <span className="header__favorite-count">{userData.favoritesNumber}</span>
+            <span className="header__favorite-count">{favoritesNumber}</span>
           </>}
       </a>
     </li>

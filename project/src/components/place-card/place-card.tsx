@@ -1,11 +1,16 @@
-import { Offer, OffersList } from '../../types/offer';
+import cn from 'classnames';
+import { Offer, Offers, OffersList } from '../../types/offer';
 import { bringFirstCharToUpperCase } from '../../utils/common';
 import { Link } from 'react-router-dom';
 import Rating from '../rating/rating';
+import { useAppDispatch } from '../../hooks/base';
+import { addFavoriteOfferAction, removeFavoriteOfferAction } from '../../store/api-actions';
 
 type PlaceCardProps = {
   classNamePrefix: string;
   offer: Offer;
+  offers: Offers;
+  favoriteOffers: Offers;
   onCardActive?: (cardId: number) => void;
   type: OffersList;
 }
@@ -26,7 +31,14 @@ const imageSizes = {
 };
 
 
-export default function PlaceCard({classNamePrefix, offer, onCardActive, type}: PlaceCardProps) {
+export default function PlaceCard({
+  classNamePrefix,
+  offer,
+  offers,
+  favoriteOffers,
+  onCardActive,
+  type}: PlaceCardProps) {
+  const dispatch = useAppDispatch();
   const size = imageSizes[type];
 
   return (
@@ -46,7 +58,25 @@ export default function PlaceCard({classNamePrefix, offer, onCardActive, type}: 
             <b className="place-card__price-value">&euro;{offer.price}</b>
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
-          <button className="place-card__bookmark-button button" type="button">
+          <button
+            className={cn('place-card__bookmark-button', 'button', {'place-card__bookmark-button--active' : offer.isFavorite})}
+            type="button"
+            onClick={() => {
+              if (!offer.isFavorite){
+                dispatch(addFavoriteOfferAction({
+                  offer,
+                  offers,
+                  favoriteOffers
+                }));
+              } else {
+                dispatch(removeFavoriteOfferAction({
+                  offer,
+                  offers,
+                  favoriteOffers
+                }));
+              }
+            }}
+          >
             <svg className="place-card__bookmark-icon" width="18" height="19">
               <use xlinkHref="#icon-bookmark"></use>
             </svg>

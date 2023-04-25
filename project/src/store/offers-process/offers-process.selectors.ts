@@ -11,7 +11,7 @@ export const getOneOfferLoadStatus = createSelector([getOneOfferStatus], (status
   isError: status === FetchStatus.Failed
 }));
 
-export const getOffers = (state: State): Offers => state[NameSpace.Offers].offersList;
+export const getOffers = (state: State): Offers => state[NameSpace.Offers].offers;
 export const getOffersStatus = (state: State): FetchStatus => state[NameSpace.Offers].offersLoadStatus;
 export const getOffersLoadStatus = createSelector([getOffersStatus], (status) => ({
   isLoading: [FetchStatus.Idle, FetchStatus.Loading].includes(status),

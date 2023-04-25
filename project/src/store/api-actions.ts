@@ -1,6 +1,6 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import { AxiosError, AxiosInstance } from 'axios';
-import { APIRoute, AppRoute, ServerErrors } from '../const';
+import { APIRoute, AppRoute, FavoritesChange, ServerErrors } from '../const';
 import { Offers, Offer } from 'types/offer';
 import { AppDispatch, State } from 'types/state';
 import { UserData } from 'types/user-data';
@@ -12,6 +12,7 @@ import { OffersData } from 'types/offers-data';
 import { toast } from 'react-toastify';
 import { redirectToRoute } from './action';
 import {StatusCodes} from 'http-status-codes';
+import { FavoritesData } from 'types/favorites-data';
 
 export const addCommentAction = createAsyncThunk<Reviews, ReviewData, {
   dispatch: AppDispatch;
@@ -41,6 +42,47 @@ export const fetchCommentsAction = createAsyncThunk<Reviews, number, {
   async (offerId, {dispatch, extra: api}) => {
     const {data} = await api.get<Reviews>(`${APIRoute.Comments}/${offerId}`);
     return data;
+  },
+);
+
+export const addFavoriteOfferAction = createAsyncThunk<FavoritesData, FavoritesData, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance;
+}>(
+  'offers/addFavorite',
+  async ({offer, offers, favoriteOffers}, {dispatch, extra: api}) => {
+    try {
+      const {data} = await api.post<Offer>(`${APIRoute.Favorites}/${offer.id}/${FavoritesChange.Add}`);
+      return {offer: data, offers, favoriteOffers};
+    } catch (err) {
+      if (err instanceof AxiosError && err.response?.status === StatusCodes.NOT_FOUND) {
+        toast.warn(ServerErrors.FavoriteOfferAdd);
+      }
+      if (err instanceof AxiosError && err.response?.status === StatusCodes.UNAUTHORIZED) {
+        toast.warn(ServerErrors.Unauthorized);
+      }
+      throw new Error();
+    }
+  },
+);
+
+export const removeFavoriteOfferAction = createAsyncThunk<FavoritesData, FavoritesData, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance;
+}>(
+  'offers/removeFavorite',
+  async ({offer, offers, favoriteOffers}, {dispatch, extra: api}) => {
+    try {
+      const {data} = await api.post<Offer>(`${APIRoute.Favorites}/${offer.id}/${FavoritesChange.Remove}`);
+      return {offer: data, offers, favoriteOffers};
+    } catch (err) {
+      if (err instanceof AxiosError && err.response?.status === StatusCodes.NOT_FOUND) {
+        toast.warn(ServerErrors.FavoriteOfferRemove);
+      }
+      throw new Error();
+    }
   },
 );
 

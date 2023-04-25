@@ -1,3 +1,4 @@
+import cn from 'classnames';
 import LayoutBase from '../../layouts/layout-base/layout-base';
 import { useParams } from 'react-router-dom';
 import RoomGallery from '../../components/room/room-gallery/room-gallery';
@@ -11,12 +12,13 @@ import Map from '../../components/map/map';
 import PlaceCardList from '../../components/place-card-list/place-card-list';
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks/base';
-import { fetchCommentsAction, fetchOneOfferAction, fetchOffersNearByAction, } from '../../store/api-actions';
+import { fetchCommentsAction, fetchOneOfferAction, fetchOffersNearByAction, addFavoriteOfferAction, removeFavoriteOfferAction, } from '../../store/api-actions';
 import { getOneOffer, getOneOfferLoadStatus, getOffers, getOffersLoadStatus } from '../../store/offers-process/offers-process.selectors';
 import { getComments, getCommentsLoadStatus } from '../../store/commets-process/commets-process.selectors';
 import { getAuthorizationStatus } from '../../store/user-process/user-process.selectors';
 import Spinner from '../../components/spinners/spinner/spinner';
 import ErrorFullScreen from '../../components/error-fullscreen/error-fullscreen';
+import { getFavoriteOffers } from '../../store/favorite-offers-process/favorite-offers-process.selectors';
 
 const OFFERS_LIST_LIMIT = 3;
 
@@ -36,6 +38,8 @@ export default function RoomPage() {
   const reviewsLoadStatus = useAppSelector(getCommentsLoadStatus);
 
   const authStatus = useAppSelector(getAuthorizationStatus);
+
+  const favoriteOffers = useAppSelector(getFavoriteOffers);
 
   useEffect(() => {
     dispatch(fetchOneOfferAction(hotelId));
@@ -67,7 +71,25 @@ export default function RoomPage() {
                 <h1 className="property__name">
                   {bringFirstCharToUpperCase(offer.title)}
                 </h1>
-                <button className="property__bookmark-button button" type="button">
+                <button
+                  className={cn('property__bookmark-button', 'button', {'property__bookmark-button--active' : offer.isFavorite})}
+                  type="button"
+                  onClick={() => {
+                    if (!offer.isFavorite){
+                      dispatch(addFavoriteOfferAction({
+                        offer,
+                        offers: [...offersNearBy],
+                        favoriteOffers
+                      }));
+                    } else {
+                      dispatch(removeFavoriteOfferAction({
+                        offer,
+                        offers: [...offersNearBy],
+                        favoriteOffers
+                      }));
+                    }
+                  }}
+                >
                   <svg className="property__bookmark-icon" width="31" height="33">
                     <use xlinkHref="#icon-bookmark"></use>
                   </svg>
@@ -113,7 +135,7 @@ export default function RoomPage() {
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
             <div className="near-places__list places__list">
               <PlaceCardList
-                offers={offersNearBy.slice(0, OFFERS_LIST_LIMIT)}
+                localOffers={offersNearBy.slice(0, OFFERS_LIST_LIMIT)}
                 type='nearPlaces'
                 classNamePrefix='near-places'
               />

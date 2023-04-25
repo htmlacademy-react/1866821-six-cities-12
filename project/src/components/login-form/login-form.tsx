@@ -40,7 +40,7 @@ export default function LoginForm() {
     }
   });
 
-  const handleInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (evt: ChangeEvent<HTMLInputElement>) => {
     const {name, value} = evt.target;
     const isError = !formData[name].regex.test(value);
     setFormData({
@@ -55,7 +55,7 @@ export default function LoginForm() {
   };
 
 
-  const handleFormSubmit = (evt: FormEvent) => {
+  const handleSubmit = (evt: FormEvent) => {
     evt.preventDefault();
     let hasEmtyFields = false;
     let hasErrors = false;
@@ -83,7 +83,7 @@ export default function LoginForm() {
   };
 
   return (
-    <form className="login__form form" action="#" method="post" onSubmit={handleFormSubmit}>
+    <form className="login__form form" action="#" method="post" onSubmit={handleSubmit}>
       {Object.entries(LoginFields).map(([name, label]) => {
         const inputErrorClassName = formData[name].error ? styles.error : '';
         return(
@@ -94,7 +94,7 @@ export default function LoginForm() {
               type={name}
               name={name}
               placeholder={label}
-              onInput={handleInputChange}
+              onInput={handleChange}
             />
             {formData[name].error && (
               <span className={styles.errorBlock}>
