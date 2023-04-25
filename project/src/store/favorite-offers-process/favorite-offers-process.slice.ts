@@ -2,12 +2,9 @@ import { createSlice } from '@reduxjs/toolkit';
 import { FetchStatus, NameSpace } from '../../const';
 import {
   fetchFavoriteOffersAction,
-  addFavoriteOfferAction,
-  removeFavoriteOfferAction,
-  logoutAction
+  toggleFavoriteOfferAction
 } from '../api-actions';
 import { Offers } from 'types/offer';
-import { offerInOffers, removeOfferFromOffers } from '../../utils/offers';
 
 export type FavoriteOffersProcess = {
   favoriteOffers: Offers;
@@ -37,35 +34,19 @@ export const favoriteOffersProcess = createSlice({
         state.favoriteOffersStatus = FetchStatus.Failed;
       })
 
-      .addCase(addFavoriteOfferAction.fulfilled, (state, action) => {
-        if (action.payload.offer.isFavorite && !offerInOffers(action.payload.favoriteOffers, action.payload.offer)) {
-          state.favoriteOffers = [...action.payload.favoriteOffers, action.payload.offer];
-        }
+      .addCase(toggleFavoriteOfferAction.fulfilled, (state, action) => {
         state.favoriteOffersStatus = FetchStatus.Success;
+        if (action.payload.isFavorite) {
+          state.favoriteOffers.push(action.payload);
+        } else {
+          state.favoriteOffers = state.favoriteOffers.filter((offer) => offer.id !== action.payload.id);
+        }
       })
-      .addCase(addFavoriteOfferAction.pending, (state) => {
+      .addCase(toggleFavoriteOfferAction.pending, (state) => {
         state.favoriteOffersStatus = FetchStatus.Loading;
       })
-      .addCase(addFavoriteOfferAction.rejected, (state) => {
+      .addCase(toggleFavoriteOfferAction.rejected, (state) => {
         state.favoriteOffersStatus = FetchStatus.Failed;
-      })
-
-      .addCase(removeFavoriteOfferAction.fulfilled, (state, action) => {
-        if (!action.payload.offer.isFavorite && offerInOffers(action.payload.favoriteOffers, action.payload.offer)) {
-          state.favoriteOffers = removeOfferFromOffers(action.payload.favoriteOffers, action.payload.offer);
-        }
-        state.favoriteOffersStatus = FetchStatus.Success;
-      })
-      .addCase(removeFavoriteOfferAction.pending, (state) => {
-        state.favoriteOffersStatus = FetchStatus.Loading;
-      })
-      .addCase(removeFavoriteOfferAction.rejected, (state) => {
-        state.favoriteOffersStatus = FetchStatus.Failed;
-      })
-
-      .addCase(logoutAction.fulfilled, (state) => {
-        state.favoriteOffers = [];
-        state.favoriteOffersStatus = FetchStatus.Idle;
       });
   }
 });

@@ -17,7 +17,7 @@ export default function LogInLogOut({isAuthorized}: SignProps) {
       <Link className="header__nav-link"
         to={AppRoute.Login}
         onClick={() => {
-          isAuthorized && dispatch(logoutAction());
+          dispatch(logoutAction());
         }}
       >
         <span className={signClassName}>{signText}</span>

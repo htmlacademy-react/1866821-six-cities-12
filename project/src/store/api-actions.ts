@@ -12,7 +12,6 @@ import { OffersData } from 'types/offers-data';
 import { toast } from 'react-toastify';
 import { redirectToRoute } from './action';
 import {StatusCodes} from 'http-status-codes';
-import { FavoritesData } from 'types/favorites-data';
 
 export const addCommentAction = createAsyncThunk<Reviews, ReviewData, {
   dispatch: AppDispatch;
@@ -45,16 +44,18 @@ export const fetchCommentsAction = createAsyncThunk<Reviews, number, {
   },
 );
 
-export const addFavoriteOfferAction = createAsyncThunk<FavoritesData, FavoritesData, {
+export const toggleFavoriteOfferAction = createAsyncThunk<Offer, {id: number; isFavorite: boolean}, {
   dispatch: AppDispatch;
   state: State;
   extra: AxiosInstance;
 }>(
-  'offers/addFavorite',
-  async ({offer, offers, favoriteOffers}, {dispatch, extra: api}) => {
+  'offers/toggleFavorite',
+  async ({id, isFavorite}, {dispatch, extra: api}) => {
+    const status = isFavorite ? FavoritesChange.Add : FavoritesChange.Remove;
+
     try {
-      const {data} = await api.post<Offer>(`${APIRoute.Favorites}/${offer.id}/${FavoritesChange.Add}`);
-      return {offer: data, offers, favoriteOffers};
+      const {data} = await api.post<Offer>(`${APIRoute.Favorites}/${id}/${status}`);
+      return data;
     } catch (err) {
       if (err instanceof AxiosError && err.response?.status === StatusCodes.NOT_FOUND) {
         toast.warn(ServerErrors.FavoriteOfferAdd);
@@ -67,24 +68,6 @@ export const addFavoriteOfferAction = createAsyncThunk<FavoritesData, FavoritesD
   },
 );
 
-export const removeFavoriteOfferAction = createAsyncThunk<FavoritesData, FavoritesData, {
-  dispatch: AppDispatch;
-  state: State;
-  extra: AxiosInstance;
-}>(
-  'offers/removeFavorite',
-  async ({offer, offers, favoriteOffers}, {dispatch, extra: api}) => {
-    try {
-      const {data} = await api.post<Offer>(`${APIRoute.Favorites}/${offer.id}/${FavoritesChange.Remove}`);
-      return {offer: data, offers, favoriteOffers};
-    } catch (err) {
-      if (err instanceof AxiosError && err.response?.status === StatusCodes.NOT_FOUND) {
-        toast.warn(ServerErrors.FavoriteOfferRemove);
-      }
-      throw new Error();
-    }
-  },
-);
 
 export const fetchOneOfferAction = createAsyncThunk<Offer, number, {
   dispatch: AppDispatch;
@@ -164,8 +147,9 @@ export const loginAction = createAsyncThunk<UserData | null, AuthData, {
   'user/login',
   async ({login: email, password}, {dispatch, extra: api}) => {
     try {
-      const {data} = await api.post<UserData | null>(APIRoute.Login, {email, password});
-      data && saveToken(data.token);
+      const {data} = await api.post<UserData>(APIRoute.Login, {email, password});
+      saveToken(data.token);
+      dispatch(fetchFavoriteOffersAction());
       return data;
     } catch (err) {
       if (err instanceof AxiosError && err.response?.status === StatusCodes.NOT_FOUND) {
@@ -185,6 +169,7 @@ export const logoutAction = createAsyncThunk<void, undefined, {
   async (_arg, {dispatch, extra: api}) => {
     try {
       await api.delete(APIRoute.Logout);
+      dispatch(fetchFavoriteOffersAction());
       dropToken();
     } catch (err) {
       if (err instanceof AxiosError && err.response?.status === StatusCodes.NOT_FOUND) {
@@ -203,6 +188,7 @@ export const checkAuthAction = createAsyncThunk<UserData | null, undefined, {
   async (_arg, {dispatch, extra: api}) => {
     try {
       const {data} = await api.get<UserData | null>(APIRoute.Login);
+      dispatch(fetchFavoriteOffersAction());
       return data;
     } catch (err) {
       if (err instanceof AxiosError && err.response?.status === StatusCodes.NOT_FOUND) {

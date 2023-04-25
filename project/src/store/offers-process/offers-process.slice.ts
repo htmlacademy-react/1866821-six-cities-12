@@ -1,13 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { FavoritesChange, FetchStatus, NameSpace } from '../../const';
+import { FetchStatus, NameSpace } from '../../const';
 import { fetchOneOfferAction,
   fetchOffersAction,
   fetchOffersNearByAction,
-  addFavoriteOfferAction,
-  removeFavoriteOfferAction
+  toggleFavoriteOfferAction
 } from '../api-actions';
 import { Offer, Offers } from 'types/offer';
-import { changeIsFavoriteFields, offerInOffers, removeOfferFromOffers } from '../../utils/offers';
 
 export type OffersProcess = {
   offers: Offers;
@@ -64,26 +62,15 @@ export const offersProcess = createSlice({
         state.offersLoadStatus = FetchStatus.Failed;
       })
 
-
-      .addCase(addFavoriteOfferAction.fulfilled, (state, action) => {
-        if (action.payload.offer.isFavorite && !offerInOffers(action.payload.favoriteOffers, action.payload.offer)) {
-          const favoriteOffers = [...action.payload.favoriteOffers, action.payload.offer];
-          const changedOffers = changeIsFavoriteFields(action.payload.offers, favoriteOffers, FavoritesChange.Add);
-          state.offers = changedOffers;
-          if (state.offer && !offerInOffers(action.payload.offers, action.payload.offer)) {
-            state.offer.isFavorite = true;
+      .addCase(toggleFavoriteOfferAction.fulfilled, (state, action) => {
+        state.offers.forEach((offer) => {
+          if (offer.id === action.payload.id) {
+            offer.isFavorite = action.payload.isFavorite;
           }
-        }
-      })
+        });
 
-
-      .addCase(removeFavoriteOfferAction.fulfilled, (state, action) => {
-        if (!action.payload.offer.isFavorite && offerInOffers(action.payload.favoriteOffers, action.payload.offer)) {
-          const favoriteOffers = removeOfferFromOffers(action.payload.favoriteOffers, action.payload.offer);
-          state.offers = changeIsFavoriteFields(action.payload.offers, favoriteOffers, FavoritesChange.Remove);
-          if (state.offer && !offerInOffers(action.payload.offers, action.payload.offer)) {
-            state.offer.isFavorite = false;
-          }
+        if(state.offer && state.offer.id === action.payload.id) {
+          state.offer.isFavorite = action.payload.isFavorite;
         }
       });
   }

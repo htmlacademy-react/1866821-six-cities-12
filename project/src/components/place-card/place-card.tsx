@@ -1,16 +1,14 @@
 import cn from 'classnames';
-import { Offer, Offers, OffersList } from '../../types/offer';
+import { Offer, OffersList } from '../../types/offer';
 import { bringFirstCharToUpperCase } from '../../utils/common';
 import { Link } from 'react-router-dom';
 import Rating from '../rating/rating';
 import { useAppDispatch } from '../../hooks/base';
-import { addFavoriteOfferAction, removeFavoriteOfferAction } from '../../store/api-actions';
+import { toggleFavoriteOfferAction } from '../../store/api-actions';
 
 type PlaceCardProps = {
   classNamePrefix: string;
   offer: Offer;
-  offers: Offers;
-  favoriteOffers: Offers;
   onCardActive?: (cardId: number) => void;
   type: OffersList;
 }
@@ -30,12 +28,9 @@ const imageSizes = {
   }
 };
 
-
 export default function PlaceCard({
   classNamePrefix,
   offer,
-  offers,
-  favoriteOffers,
   onCardActive,
   type}: PlaceCardProps) {
   const dispatch = useAppDispatch();
@@ -48,9 +43,9 @@ export default function PlaceCard({
         <span>Premium</span>
       </div>}
       <div className={`${classNamePrefix}__image-wrapper place-card__image-wrapper`}>
-        <a href="#/">
+        <Link to={`/offer/${offer.id}`}>
           <img className="place-card__image" src={offer.previewImage} width={size.width} height={size.height} alt="Place" />
-        </a>
+        </Link>
       </div>
       <div className={`${classNamePrefix}__card-info place-card__info`}>
         <div className="place-card__price-wrapper">
@@ -61,21 +56,7 @@ export default function PlaceCard({
           <button
             className={cn('place-card__bookmark-button', 'button', {'place-card__bookmark-button--active' : offer.isFavorite})}
             type="button"
-            onClick={() => {
-              if (!offer.isFavorite){
-                dispatch(addFavoriteOfferAction({
-                  offer,
-                  offers,
-                  favoriteOffers
-                }));
-              } else {
-                dispatch(removeFavoriteOfferAction({
-                  offer,
-                  offers,
-                  favoriteOffers
-                }));
-              }
-            }}
+            onClick={() => {dispatch(toggleFavoriteOfferAction({id: offer.id, isFavorite: !offer.isFavorite}));}}
           >
             <svg className="place-card__bookmark-icon" width="18" height="19">
               <use xlinkHref="#icon-bookmark"></use>

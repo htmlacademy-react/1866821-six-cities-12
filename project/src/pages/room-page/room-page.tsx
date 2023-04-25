@@ -12,13 +12,12 @@ import Map from '../../components/map/map';
 import PlaceCardList from '../../components/place-card-list/place-card-list';
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks/base';
-import { fetchCommentsAction, fetchOneOfferAction, fetchOffersNearByAction, addFavoriteOfferAction, removeFavoriteOfferAction, } from '../../store/api-actions';
+import { fetchCommentsAction, fetchOneOfferAction, fetchOffersNearByAction, toggleFavoriteOfferAction} from '../../store/api-actions';
 import { getOneOffer, getOneOfferLoadStatus, getOffers, getOffersLoadStatus } from '../../store/offers-process/offers-process.selectors';
 import { getComments, getCommentsLoadStatus } from '../../store/commets-process/commets-process.selectors';
 import { getAuthorizationStatus } from '../../store/user-process/user-process.selectors';
 import Spinner from '../../components/spinners/spinner/spinner';
 import ErrorFullScreen from '../../components/error-fullscreen/error-fullscreen';
-import { getFavoriteOffers } from '../../store/favorite-offers-process/favorite-offers-process.selectors';
 
 const OFFERS_LIST_LIMIT = 3;
 
@@ -38,8 +37,6 @@ export default function RoomPage() {
   const reviewsLoadStatus = useAppSelector(getCommentsLoadStatus);
 
   const authStatus = useAppSelector(getAuthorizationStatus);
-
-  const favoriteOffers = useAppSelector(getFavoriteOffers);
 
   useEffect(() => {
     dispatch(fetchOneOfferAction(hotelId));
@@ -74,21 +71,7 @@ export default function RoomPage() {
                 <button
                   className={cn('property__bookmark-button', 'button', {'property__bookmark-button--active' : offer.isFavorite})}
                   type="button"
-                  onClick={() => {
-                    if (!offer.isFavorite){
-                      dispatch(addFavoriteOfferAction({
-                        offer,
-                        offers: [...offersNearBy],
-                        favoriteOffers
-                      }));
-                    } else {
-                      dispatch(removeFavoriteOfferAction({
-                        offer,
-                        offers: [...offersNearBy],
-                        favoriteOffers
-                      }));
-                    }
-                  }}
+                  onClick={() => {dispatch(toggleFavoriteOfferAction({id: offer.id, isFavorite: !offer.isFavorite}));}}
                 >
                   <svg className="property__bookmark-icon" width="31" height="33">
                     <use xlinkHref="#icon-bookmark"></use>

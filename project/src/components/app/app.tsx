@@ -9,7 +9,7 @@ import RoomPage from '../../pages/room-page/room-page';
 import PrivateRoute from '../private-route/private-route';
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks/base';
-import { checkAuthAction, fetchFavoriteOffersAction } from '../../store/api-actions';
+import { checkAuthAction } from '../../store/api-actions';
 import ErrorFullScreen from '../../components/error-fullscreen/error-fullscreen';
 import browserHistory from '../../browser-history';
 import HistoryRouter from '../../components/history-route/history-route';
@@ -22,7 +22,6 @@ function App() {
 
   useEffect(() => {
     dispatch(checkAuthAction());
-    dispatch(fetchFavoriteOffersAction());
   }, [dispatch]);
 
   if (authorizationStatus.unknown) {
