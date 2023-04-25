@@ -132,7 +132,6 @@ export const SortKinds: SortType = {
   RATED_FIRST: 'Top rated first'
 } as const;
 
-
 export const SortDirection = {
   UP: 1,
   LOW: -1
