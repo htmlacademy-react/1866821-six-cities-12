@@ -1,7 +1,10 @@
+import cn from 'classnames';
 import { Offer, OffersList } from '../../types/offer';
 import { bringFirstCharToUpperCase } from '../../utils/common';
 import { Link } from 'react-router-dom';
 import Rating from '../rating/rating';
+import { useAppDispatch } from '../../hooks/base';
+import { toggleFavoriteOfferAction } from '../../store/api-actions';
 
 type PlaceCardProps = {
   classNamePrefix: string;
@@ -25,8 +28,12 @@ const imageSizes = {
   }
 };
 
-
-export default function PlaceCard({classNamePrefix, offer, onCardActive, type}: PlaceCardProps) {
+export default function PlaceCard({
+  classNamePrefix,
+  offer,
+  onCardActive,
+  type}: PlaceCardProps) {
+  const dispatch = useAppDispatch();
   const size = imageSizes[type];
 
   return (
@@ -36,9 +43,9 @@ export default function PlaceCard({classNamePrefix, offer, onCardActive, type}: 
         <span>Premium</span>
       </div>}
       <div className={`${classNamePrefix}__image-wrapper place-card__image-wrapper`}>
-        <a href="#/">
+        <Link to={`/offer/${offer.id}`}>
           <img className="place-card__image" src={offer.previewImage} width={size.width} height={size.height} alt="Place" />
-        </a>
+        </Link>
       </div>
       <div className={`${classNamePrefix}__card-info place-card__info`}>
         <div className="place-card__price-wrapper">
@@ -46,7 +53,11 @@ export default function PlaceCard({classNamePrefix, offer, onCardActive, type}: 
             <b className="place-card__price-value">&euro;{offer.price}</b>
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
-          <button className="place-card__bookmark-button button" type="button">
+          <button
+            className={cn('place-card__bookmark-button', 'button', {'place-card__bookmark-button--active' : offer.isFavorite})}
+            type="button"
+            onClick={() => {dispatch(toggleFavoriteOfferAction({id: offer.id, isFavorite: !offer.isFavorite}));}}
+          >
             <svg className="place-card__bookmark-icon" width="18" height="19">
               <use xlinkHref="#icon-bookmark"></use>
             </svg>

@@ -3,19 +3,19 @@ import { FetchStatus, NameSpace } from '../../const';
 import { fetchOneOfferAction,
   fetchOffersAction,
   fetchOffersNearByAction,
-  fetchFavoriteOffersAction
+  toggleFavoriteOfferAction
 } from '../api-actions';
 import { Offer, Offers } from 'types/offer';
 
 export type OffersProcess = {
-  offersList: Offers;
+  offers: Offers;
   offersLoadStatus: FetchStatus;
   offer: Offer | null;
   offerLoadStatus: FetchStatus;
 }
 
 const initialState: OffersProcess = {
-  offersList: [],
+  offers: [],
   offersLoadStatus: FetchStatus.Idle,
   offer: null,
   offerLoadStatus: FetchStatus.Idle,
@@ -42,11 +42,11 @@ export const offersProcess = createSlice({
         state.offersLoadStatus = FetchStatus.Loading;
       })
       .addCase(fetchOffersAction.fulfilled, (state, action) => {
-        state.offersList = action.payload;
+        state.offers = action.payload;
         state.offersLoadStatus = FetchStatus.Success;
       })
       .addCase(fetchOffersAction.rejected, (state) => {
-        state.offersList = [];
+        state.offers = [];
         state.offersLoadStatus = FetchStatus.Failed;
       })
 
@@ -54,24 +54,24 @@ export const offersProcess = createSlice({
         state.offersLoadStatus = FetchStatus.Loading;
       })
       .addCase(fetchOffersNearByAction.fulfilled, (state, action) => {
-        state.offersList = action.payload;
+        state.offers = action.payload;
         state.offersLoadStatus = FetchStatus.Success;
       })
       .addCase(fetchOffersNearByAction.rejected, (state) => {
-        state.offersList = [];
+        state.offers = [];
         state.offersLoadStatus = FetchStatus.Failed;
       })
 
-      .addCase(fetchFavoriteOffersAction.pending, (state) => {
-        state.offersLoadStatus = FetchStatus.Loading;
-      })
-      .addCase(fetchFavoriteOffersAction.fulfilled, (state, action) => {
-        state.offersList = action.payload;
-        state.offersLoadStatus = FetchStatus.Success;
-      })
-      .addCase(fetchFavoriteOffersAction.rejected, (state) => {
-        state.offersList = [];
-        state.offersLoadStatus = FetchStatus.Failed;
+      .addCase(toggleFavoriteOfferAction.fulfilled, (state, action) => {
+        state.offers.forEach((offer) => {
+          if (offer.id === action.payload.id) {
+            offer.isFavorite = action.payload.isFavorite;
+          }
+        });
+
+        if(state.offer && state.offer.id === action.payload.id) {
+          state.offer.isFavorite = action.payload.isFavorite;
+        }
       });
   }
 });

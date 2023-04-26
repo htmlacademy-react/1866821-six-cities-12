@@ -1,6 +1,11 @@
 import { CitiesMap } from 'types/city';
 import { SortType } from 'types/sort';
 
+export enum FavoritesChange {
+  Remove = 0,
+  Add = 1
+}
+
 export const REDIRECT_ACTION_NAME = 'app/redirectToRoute';
 
 export enum ServerErrors {
@@ -9,9 +14,10 @@ export enum ServerErrors {
   Logout = 'Logout internal error, try again later',
   GetOffers = 'Get offers internal error, try again later',
   Comment = 'Comment add internal error, try again later',
-  Unauthorized = 'No unauthorized'
+  Unauthorized = 'No unauthorized',
+  FavoriteOfferAdd = 'Offer not added to favorites, internal error, try again later',
+  FavoriteOfferRemove = 'Offer not added to favorites, internal error, try again later'
 }
-
 
 export enum FetchStatus {
   Idle = 'Idle',
@@ -23,6 +29,7 @@ export enum FetchStatus {
 export enum NameSpace {
   AppAside = 'APP_ASIDE',
   Offers = 'OFFERS',
+  FavoriteOffers = 'FAVORITE_OFFERS',
   User = 'USER',
   Comments = 'COMMENTS'
 }
@@ -52,16 +59,11 @@ export enum APIRoute {
   Logout = '/logout'
 }
 
-export const TIMEOUT_SHOW_ERROR = 2000;
-
 export const URL_MARKER_DEFAULT =
   'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjciIGhlaWdodD0iMzkiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTIzLjg1NiAxNy45MjlhMTEuNzMzIDExLjczMyAwIDAgMCAxLjIxMy01LjE5NkMyNS4wNyA2LjI1MyAxOS44MTYgMSAxMy4zMzYgMWMtMS44MzUgMC0zLjY0My40NC01LjI3MiAxLjI4NUMyLjQ0NCA1LjE5Ny4yNDggMTIuMTEzIDMuMTYgMTcuNzMzbDkuNzM2IDE4Ljc5MmExIDEgMCAwIDAgMS43ODQtLjAxN2w5LjE3Ni0xOC41OHoiIGZpbGw9IiM0NDgxQzMiIHN0cm9rZT0iI0ZGRiIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz48L3N2Zz4NCg==';
 
 export const URL_MARKER_CURRENT =
   'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjciIGhlaWdodD0iMzkiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTIzLjg1NiAxNy45MjlhMTEuNzMzIDExLjczMyAwIDAgMCAxLjIxMy01LjE5NkMyNS4wNyA2LjI1MyAxOS44MTYgMSAxMy4zMzYgMWMtMS44MzUgMC0zLjY0My40NC01LjI3MiAxLjI4NUMyLjQ0NCA1LjE5Ny4yNDggMTIuMTEzIDMuMTYgMTcuNzMzbDkuNzM2IDE4Ljc5MmExIDEgMCAwIDAgMS43ODQtLjAxN2w5LjE3Ni0xOC41OHoiIGZpbGw9IiNGRjkwMDAiIHN0cm9rZT0iI0ZGRiIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz48L3N2Zz4NCg==';
-
-export const CITIES_CLASS_PREFIX = 'cities';
-export const FAVORITES_CLASS_PREFIX = 'favorites';
 
 export const NO_CARD_ID = -1;
 export const MAX_RATING_NUMBER = 5;
@@ -125,13 +127,7 @@ export const SortKinds: SortType = {
   RATED_FIRST: 'Top rated first'
 } as const;
 
-
 export const SortDirection = {
   UP: 1,
   LOW: -1
-};
-
-export const SortField = {
-  RATING: 'rating',
-  PRICE: 'price'
 };

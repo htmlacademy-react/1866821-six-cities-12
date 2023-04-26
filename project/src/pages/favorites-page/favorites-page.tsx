@@ -3,24 +3,16 @@ import LayoutBase from '../../layouts/layout-base/layout-base';
 import PlaceCardList from '../../components/place-card-list/place-card-list';
 import { OffersByCity } from '../../types/offer';
 import { groupOffers } from '../../utils/offers';
-import { useAppDispatch, useAppSelector } from '../../hooks/base';
-import { useEffect } from 'react';
-import { getOffers, getOffersLoadStatus } from '../../store/offers-process/offers-process.selectors';
-import { fetchFavoriteOffersAction } from '../../store/api-actions';
+import { useAppSelector } from '../../hooks/base';
 import ErrorFullScreen from '../../components/error-fullscreen/error-fullscreen';
 import Spinner from '../../components/spinners/spinner/spinner';
+import { getFavoriteOffers, getFavoriteOffersLoadStatus } from '../../store/favorite-offers-process/favorite-offers-process.selectors';
 
 export default function FavoritesPage() {
-  const favoriteOffers = useAppSelector(getOffers);
-  const favoriteLoadStatus = useAppSelector(getOffersLoadStatus);
-  const dispatch = useAppDispatch();
+  const favoriteOffers = useAppSelector(getFavoriteOffers);
+  const favoriteLoadStatus = useAppSelector(getFavoriteOffersLoadStatus);
   const favoriteOffersByCity: OffersByCity = groupOffers(favoriteOffers);
   const favoritesIsEmpty = (favoriteOffers.length === 0);
-
-  useEffect(() => {
-    dispatch(fetchFavoriteOffersAction());
-  }, [dispatch]);
-
 
   if (favoriteLoadStatus.isError) {
     return <ErrorFullScreen />;
@@ -62,7 +54,7 @@ export default function FavoritesPage() {
                   </div>
                   <div className="favorites__places">
                     <PlaceCardList
-                      offers={favoriteOffersByCity[cityName]}
+                      localOffers={favoriteOffersByCity[cityName]}
                       type='favorites'
                       classNamePrefix='favorites'
                     />

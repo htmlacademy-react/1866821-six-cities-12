@@ -3,6 +3,7 @@ import { getAuthorizationStatus, getUserData } from '../../../store/user-process
 import Spinner from '../../spinners/spinner/spinner';
 import UserInfo from '../user-info/user-info';
 import LogInLogOut from '../log-in-log-out/log-in-log-out';
+import { getFavoriteOffers } from '../../../store/favorite-offers-process/favorite-offers-process.selectors';
 
 const spinnerSize = {
   width: 25,
@@ -12,6 +13,7 @@ const spinnerSize = {
 export default function UserAuthNotAuth() {
   const authStatus = useAppSelector(getAuthorizationStatus);
   const userData = useAppSelector(getUserData);
+  const favoriteOffers = useAppSelector(getFavoriteOffers);
 
   if (authStatus.unknown) {
     return (
@@ -21,7 +23,7 @@ export default function UserAuthNotAuth() {
 
   return (
     <>
-      <UserInfo userData={userData}/>
+      <UserInfo userData={userData} favoritesNumber={favoriteOffers.length}/>
       <LogInLogOut isAuthorized={authStatus.auth}/>
     </>
   );
