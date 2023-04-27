@@ -8,7 +8,12 @@ type PlaceCardListProps = {
   onListItemActive?: (cardId: number) => void;
 }
 
-export default function PlaceCardList({localOffers, classNamePrefix, type, onListItemActive}: PlaceCardListProps) {
+export default function PlaceCardList({
+  localOffers,
+  classNamePrefix,
+  type,
+  onListItemActive
+}: PlaceCardListProps) {
   return (
     <>
       {localOffers.map((offer) => (

@@ -7,12 +7,7 @@ import cn from 'classnames';
 import { getCommentAddLoadStatus } from '../../../../store/commets-process/commets-process.selectors';
 import { useParams } from 'react-router-dom';
 import { resetCommentsLoadStatus } from '../../../../store/commets-process/commets-process.slice';
-
-const COMMNET_MIN_LENGTH = 50;
-const COMMNET_MAX_LENGTH = 300;
-const MIN_RATING = 0;
-const RATING_FIELD_NAME = 'rating';
-const COMMENT_FIELD_NAME = 'comment';
+import { FeedbackFormLimits, FeedbackFormFieldsNames } from '../../../../const';
 
 type Field = {
   comment: string;
@@ -36,15 +31,15 @@ export default function FeedbackForm() {
   const handleChange: ChangeEventHandlerCommon = (evt) => {
     const {name, value} = evt.target;
 
-    let isRatingError = formData.rating === MIN_RATING;
-    let isMessageError = formData.comment.length < COMMNET_MIN_LENGTH || formData.comment.length > COMMNET_MAX_LENGTH;
+    let isRatingError = formData.rating === FeedbackFormLimits.MinRating;
+    let isMessageError = formData.comment.length < FeedbackFormLimits.CommentMinLength || formData.comment.length > FeedbackFormLimits.CommentMaxLength;
 
-    if (name === RATING_FIELD_NAME) {
-      isRatingError = Number(value) === MIN_RATING;
+    if (name === FeedbackFormFieldsNames.Rating) {
+      isRatingError = Number(value) === FeedbackFormLimits.MinRating;
     }
 
-    if (name === COMMENT_FIELD_NAME) {
-      isMessageError = value.length < COMMNET_MIN_LENGTH || value.length > COMMNET_MAX_LENGTH;
+    if (name === FeedbackFormFieldsNames.Comment) {
+      isMessageError = value.length < FeedbackFormLimits.CommentMinLength || value.length > FeedbackFormLimits.CommentMaxLength;
     }
 
     const isError = (isMessageError || isRatingError);
@@ -91,7 +86,7 @@ export default function FeedbackForm() {
         value={formData.comment}
         className={cn('reviews__textarea', 'form__textarea')}
         id="review"
-        name={COMMENT_FIELD_NAME}
+        name={FeedbackFormFieldsNames.Comment}
         placeholder="Tell how was your stay, what you like and what can be improved"
         disabled={commentAddLoadStatus.isLoading}
       >

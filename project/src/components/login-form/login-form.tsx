@@ -10,8 +10,7 @@ const LoginFields: Record<string, string> = {
 };
 
 const emailRegexPattern = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
-const passwordRegexPattern = /^\S*$/;
-
+const passwordRegexPattern = /((\d+).*([a-zA-Zа-яА-Я+]))|(([a-zA-Zа-яА-Я+]).*(\d+))/;
 type Field = {
   value: string;
   regex: RegExp;

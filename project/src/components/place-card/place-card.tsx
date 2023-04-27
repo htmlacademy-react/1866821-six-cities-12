@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import Rating from '../rating/rating';
 import { useAppDispatch } from '../../hooks/base';
 import { toggleFavoriteOfferAction } from '../../store/api-actions';
+import { NO_CARD_ID } from '../../const';
 
 type PlaceCardProps = {
   classNamePrefix: string;
@@ -37,7 +38,11 @@ export default function PlaceCard({
   const size = imageSizes[type];
 
   return (
-    <article className={`${classNamePrefix}__card place-card`} onMouseOver={() => onCardActive && onCardActive(offer.id)}>
+    <article
+      className={`${classNamePrefix}__card place-card`}
+      onMouseOver={() => onCardActive && onCardActive(offer.id)}
+      onMouseLeave={() => onCardActive && onCardActive(NO_CARD_ID)}
+    >
       {offer.isPremium &&
       <div className="place-card__mark">
         <span>Premium</span>
