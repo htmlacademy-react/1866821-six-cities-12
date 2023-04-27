@@ -34,6 +34,7 @@ export default function RoomPage() {
   const offersNearByLoadStatus = useAppSelector(getOffersLoadStatus);
 
   const reviews = useAppSelector(getComments);
+  const revewsSortedNewToOld = [...reviews].reverse();
   const reviewsLoadStatus = useAppSelector(getCommentsLoadStatus);
 
   const authStatus = useAppSelector(getAuthorizationStatus);
@@ -100,7 +101,7 @@ export default function RoomPage() {
                 description={offer.description}
               />
               {reviewsLoadStatus.isLoading && <Spinner />}
-              {reviewsLoadStatus.isSuccess && <RoomReviews reviews={reviews} isAuthorized={authStatus.auth}/>}
+              {reviewsLoadStatus.isSuccess && <RoomReviews reviews={revewsSortedNewToOld} isAuthorized={authStatus.auth}/>}
             </div>
           </div>
           <Map
